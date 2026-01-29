@@ -15,6 +15,7 @@ load_dotenv()
 
 from src.infrastructure.api.routes import router as products_router
 from src.infrastructure.api.auth_routes import router as auth_router
+from src.infrastructure.api.purchase_routes import router as purchase_router
 
 # Configure logging
 logging.basicConfig(
@@ -72,6 +73,7 @@ app.add_middleware(
 
 app.include_router(products_router, prefix="/api/v1/products")
 app.include_router(auth_router, prefix="/api/v1/auth")
+app.include_router(purchase_router, prefix="/api/v1/purchasing")
 
 # Servir archivos estáticos para documentos subidos
 from fastapi.staticfiles import StaticFiles

@@ -36,6 +36,13 @@ Se utilizan variables de entorno para la configuración:
 Se implementa un servicio de **Scheduler** basado en `APScheduler` que corre en segundo plano junto a la API:
 - **Check de Vencimientos**: Se ejecuta diariamente (configurado por defecto a las 8:00 AM) para buscar artículos que deben devolverse al día siguiente y envía un correo preventivo al solicitante.
 
+## 🛒 Módulo de Compras (KPIs)
+
+El nuevo módulo de Compras permite gestionar proveedores y órdenes de compra, midiendo:
+- **Calidad**: % de pedidos rechazados por defectos.
+- **Costes**: Coste Total de Adquisición (CTA) y Ahorros Totales.
+- **Plazos**: Cumplimiento de fechas de entrega (Lead Time).
+
 ## 📄 Generación de Actas (PDF)
 
 Al registrar una salida de almacén, el sistema genera automáticamente un **Acta de Recepción/Despacho** que incluye:
@@ -51,6 +58,8 @@ Al registrar una salida de almacén, el sistema genera automáticamente un **Act
 - `GET /api/v1/products`: Listar inventario completo.
 - `POST /api/v1/products`: Crear producto con carga de documento inicial.
 - `PATCH /api/v1/products/{id}`: Actualización parcial y trazabilidad.
+- `POST /api/v1/purchasing/orders`: Creación de órdenes de compra.
+- `GET /api/v1/purchasing/kpis`: Métricas de Calidad, Costes y Plazos.
 - `POST /api/v1/products/{id}/receive-stock`: Entrada de mercancía con adjuntos.
 - `POST /api/v1/products/{id}/sell`: Salida de mercancía (soporta flujos devolutivos y correos automáticos).
 - `GET /api/v1/products/movements`: Historial completo de trazabilidad.

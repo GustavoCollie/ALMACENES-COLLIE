@@ -34,6 +34,7 @@ class ProductModel(Base):
     
     # Cascade delete movements when product is deleted
     movements = relationship("MovementModel", cascade="all, delete-orphan", back_populates="product")
+    purchase_orders = relationship("PurchaseOrderModel", back_populates="product")
     
     # Índices para mejorar performance
     __table_args__ = (
@@ -88,3 +89,42 @@ class MovementModel(Base):
     
     def __repr__(self) -> str:
         return f"<MovementModel(id={self.id}, type={self.type}, product={self.product_id})>"
+
+
+class SupplierModel(Base):
+    __tablename__ = "suppliers"
+    
+    id = Column(String(36), primary_key=True)
+    name = Column(String(200), nullable=False)
+    email = Column(String(255), nullable=False)
+    phone = Column(String(50), nullable=True)
+    
+    purchase_orders = relationship("PurchaseOrderModel", back_populates="supplier")
+
+    def __repr__(self):
+        return f"<SupplierModel(name={self.name})>"
+
+
+class PurchaseOrderModel(Base):
+    __tablename__ = "purchase_orders"
+    
+    id = Column(String(36), primary_key=True)
+    supplier_id = Column(String(36), ForeignKey("suppliers.id"), nullable=False)
+    product_id = Column(String(36), ForeignKey("products.id"), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    unit_price = Column(Numeric(10, 2), nullable=False)
+    total_amount = Column(Numeric(10, 2), nullable=False)
+    savings_amount = Column(Numeric(10, 2), default=0)
+    status = Column(String(20), default="PENDING") # PENDING, RECEIVED, REJECTED
+    is_rejected = Column(Boolean, default=False)
+    rejection_reason = Column(String(500), nullable=True)
+    expected_delivery_date = Column(DateTime, nullable=True)
+    actual_delivery_date = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=get_local_time)
+    
+    # Relationships
+    supplier = relationship("SupplierModel", back_populates="purchase_orders")
+    product = relationship("ProductModel", back_populates="purchase_orders")
+
+    def __repr__(self):
+        return f"<PurchaseOrderModel(id={self.id}, status={self.status})>"

@@ -9,11 +9,16 @@ import { ProductForm } from './components/Forms/ProductForm';
 import { SellProductModal } from './components/Dashboard/SellProductModal';
 import { StockInModal } from './components/Dashboard/StockInModal';
 import { ConfirmationModal } from './components/UI/ConfirmationModal';
+import { usePurchasing } from './hooks/usePurchasing';
+import { PurchasingDashboard } from './components/Dashboard/PurchasingDashboard';
+import { PurchaseOrderForm } from './components/Forms/PurchaseOrderForm';
+import { SupplierForm } from './components/Forms/SupplierForm';
+import { ShoppingBag } from 'lucide-react';
 
 function App() {
   const navigate = useNavigate();
   const [isAuthChecking, setIsAuthChecking] = useState(true);
-  const [activeTab, setActiveTab] = useState('inventory'); // 'inventory' or 'movements'
+  const [activeTab, setActiveTab] = useState('inventory'); // 'inventory', 'movements', or 'purchasing'
 
   React.useEffect(() => {
     const token = localStorage.getItem('token');
@@ -37,9 +42,21 @@ function App() {
     refresh
   } = useProducts();
 
+  const {
+    suppliers,
+    orders,
+    kpis,
+    loading: purchasingLoading,
+    createSupplier,
+    createOrder,
+    updateOrder
+  } = usePurchasing();
+
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [showSupplierForm, setShowSupplierForm] = useState(false);
 
   // Modals state
   const [productToSell, setProductToSell] = useState(null);
@@ -178,6 +195,16 @@ function App() {
             <History size={18} />
             <span className="tracking-widest">TRAZABILIDAD</span>
           </button>
+          <button
+            onClick={() => setActiveTab('purchasing')}
+            className={`flex items-center space-x-2 px-8 py-3.5 rounded-xl text-sm font-black transition-all ${activeTab === 'purchasing'
+              ? 'bg-emerald-600 text-white shadow-md'
+              : 'text-slate-500 hover:text-slate-800 hover:bg-white'
+              }`}
+          >
+            <ShoppingBag size={18} />
+            <span className="tracking-widest">COMPRAS</span>
+          </button>
         </div>
 
         {/* Main Content Area */}
@@ -230,7 +257,7 @@ function App() {
                 onSell={setProductToSell}
               />
             </>
-          ) : (
+          ) : activeTab === 'movements' ? (
             <>
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-4">
                 <div>
@@ -246,6 +273,24 @@ function App() {
               </div>
               <MovementTable movements={movements} loading={movementsLoading} />
             </>
+          ) : (
+            <PurchasingDashboard
+              suppliers={suppliers}
+              orders={orders}
+              kpis={kpis}
+              loading={purchasingLoading}
+              onAddOrder={() => setShowOrderForm(true)}
+              onAddSupplier={() => setShowSupplierForm(true)}
+              onUpdateOrderStatus={(id, status) => {
+                const is_rejected = status === 'REJECTED';
+                updateOrder(id, {
+                  status,
+                  is_rejected,
+                  actual_delivery_date: new Date().toISOString(),
+                  rejection_reason: is_rejected ? "Rechazo manual por usuario" : null
+                });
+              }}
+            />
           )}
         </main>
 
@@ -295,6 +340,30 @@ function App() {
           onConfirm={handleConfirmDelete}
           title="Confirmar Eliminación"
           message={`¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer y el registro desaparecerá permanentemente.`}
+        />
+      )}
+
+      {showOrderForm && (
+        <PurchaseOrderForm
+          suppliers={suppliers}
+          products={products}
+          loading={purchasingLoading}
+          onClose={() => setShowOrderForm(false)}
+          onSubmit={async (data) => {
+            await createOrder(data);
+            setShowOrderForm(false);
+          }}
+        />
+      )}
+
+      {showSupplierForm && (
+        <SupplierForm
+          suppliers={suppliers}
+          loading={purchasingLoading}
+          onClose={() => setShowSupplierForm(false)}
+          onSubmit={async (data) => {
+            await createSupplier(data);
+          }}
         />
       )}
     </div>

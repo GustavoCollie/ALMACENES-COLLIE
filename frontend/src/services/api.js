@@ -62,4 +62,13 @@ export const inventoryService = {
     getMovements: () => api.get('/products/movements'),
 };
 
+export const purchasingService = {
+    getSuppliers: () => api.get('/purchasing/suppliers'),
+    createSupplier: (data) => api.post('/purchasing/suppliers', data),
+    getOrders: () => api.get('/purchasing/orders'),
+    createOrder: (data) => api.post('/purchasing/orders', data),
+    updateOrder: (id, data) => api.patch(`/purchasing/orders/${id}`, data),
+    getKPIs: () => api.get('/purchasing/kpis'),
+};
+
 export default api;

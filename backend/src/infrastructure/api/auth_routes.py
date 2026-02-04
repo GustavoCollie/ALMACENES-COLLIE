@@ -7,12 +7,16 @@ from src.domain.schemas import (
     PasswordResetRequest, PasswordResetConfirm
 )
 from .dependencies import get_auth_service
+from src.main import limiter
+from fastapi import Request
 
 router = APIRouter(tags=["Auth"])
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit("5 per hour")
 async def register(
     request: UserCreate,
+    api_request: Request,
     service: AuthService = Depends(get_auth_service)
 ):
     try:
@@ -21,8 +25,10 @@ async def register(
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/login", response_model=Token)
+@limiter.limit("10 per hour")
 async def login(
     request: UserLogin,
+    api_request: Request,
     service: AuthService = Depends(get_auth_service)
 ):
     try:

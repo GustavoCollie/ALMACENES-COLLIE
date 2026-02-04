@@ -56,9 +56,9 @@ class ProductRepository(Protocol):
         """
         ...
 
-    def find_all(self) -> list[Product]:
+    def find_all(self, skip: int = 0, limit: int = 100) -> list[Product]:
         """
-        Retorna todos los productos del repositorio.
+        Retorna todos los productos del repositorio con paginación.
         
         Returns:
             Lista de productos
@@ -83,9 +83,9 @@ class ProductRepository(Protocol):
         """
         ...
 
-    def find_all_movements(self) -> list['Movement']:
+    def find_all_movements(self, skip: int = 0, limit: int = 100) -> list['Movement']:
         """
-        Retorna todos los movimientos registrados.
+        Retorna todos los movimientos registrados con paginación.
         """
         ...
 

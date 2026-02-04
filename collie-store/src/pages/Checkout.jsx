@@ -80,12 +80,10 @@ const Checkout = () => {
                 apply_discount: false
             };
 
-            console.log("Iniciando checkout con payload:", checkoutPayload);
             const result = await createCheckoutSession(checkoutPayload);
             // ...
             // (rest of the component)
             if (result.checkout_url) {
-                console.log("Redirigiendo a:", result.checkout_url);
                 window.location.href = result.checkout_url;
                 // Note: We don't reset loading here to prevent re-clicks while redirecting
             } else {

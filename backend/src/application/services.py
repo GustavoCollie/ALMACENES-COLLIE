@@ -154,12 +154,12 @@ class InventoryService:
             
         return product
 
-    def get_movements(self) -> list:
+    def get_movements(self, skip: int = 0, limit: int = 100) -> list:
         """
-        Retorna todos los movimientos registrados.
+        Retorna todos los movimientos registrados con paginación.
         """
         if hasattr(self._repository, 'find_all_movements'):
-            return self._repository.find_all_movements()
+            return self._repository.find_all_movements(skip=skip, limit=limit)
         return []
 
     def get_pending_returns(self, product_id: Optional[UUID] = None) -> list:
@@ -200,9 +200,9 @@ class InventoryService:
                 
         return pending
 
-    def list_products(self) -> list[Product]:
-        """Lists all products in the inventory."""
-        return self._repository.find_all()
+    def list_products(self, skip: int = 0, limit: int = 100) -> list[Product]:
+        """Lists all products in the inventory with pagination."""
+        return self._repository.find_all(skip=skip, limit=limit)
 
     def update_product(
         self,

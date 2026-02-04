@@ -13,6 +13,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+
+limiter = Limiter(key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
+
 from src.infrastructure.api.routes import router as products_router
 from src.infrastructure.api.auth_routes import router as auth_router
 from src.infrastructure.api.purchase_routes import router as purchase_router
@@ -38,6 +45,15 @@ async def lifespan(app: FastAPI):
     Application lifespan manager.
     Handles startup and shutdown events.
     """
+    # Validate critical environment variables
+    required_vars = ["DATABASE_URL", "SECRET_KEY", "API_KEY"]
+    missing = [var for var in required_vars if not os.getenv(var)]
+    if missing:
+        raise RuntimeError(
+            f"Missing required environment variables: {', '.join(missing)}. "
+            f"Please configure these in your .env file."
+        )
+    
     repo_type = os.getenv('REPOSITORY_TYPE', 'memory')
     logger.info(f"Starting application. Repository mode: {repo_type}")
     
@@ -83,6 +99,9 @@ app = FastAPI(
     },
     lifespan=lifespan
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 # Request logging middleware
 from fastapi import Request
@@ -98,9 +117,13 @@ async def log_requests(request: Request, call_next):
     )
     return response
 
+# Configure CORS with dynamic origins
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174").split(",")
+logger.info(f"CORS configured for origins: {origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -152,6 +175,14 @@ def read_root():
         "status": "online",
         "mode": os.getenv("REPOSITORY_TYPE", "memory")
     }
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "timestamp": time.time()}
+
+@app.get("/ping")
+def ping():
+    return "pong"
 
 
 if __name__ == "__main__":

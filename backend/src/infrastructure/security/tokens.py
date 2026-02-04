@@ -7,8 +7,13 @@ from jose import jwt, JWTError
 import os
 from src.ports.security import TokenProvider
 
-# Configuration (should be in env)
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-super-secret")
+# Configuration (must be in env - no defaults for security)
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError(
+        "SECRET_KEY environment variable is required. "
+        "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(32))\""
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

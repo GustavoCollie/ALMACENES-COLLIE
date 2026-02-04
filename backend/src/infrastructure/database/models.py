@@ -108,6 +108,14 @@ class MovementModel(Base):
     # Relación
     product = relationship("ProductModel", back_populates="movements")
     
+    # Índices para mejorar performance
+    __table_args__ = (
+        Index('idx_movement_reference', 'reference'),
+        Index('idx_movement_product_id', 'product_id'),
+        Index('idx_movement_type', 'type'),
+        Index('idx_movement_date', 'date'),
+    )
+    
     def __repr__(self) -> str:
         return f"<MovementModel(id={self.id}, type={self.type}, product={self.product_id})>"
 
@@ -206,6 +214,13 @@ class SalesOrderModel(Base):
     
     # Relationships
     product = relationship("ProductModel", back_populates="sales_orders")
+    
+    # Índices para mejorar performance
+    __table_args__ = (
+        Index('idx_sales_customer_email', 'customer_email'),
+        Index('idx_sales_status', 'status'),
+        Index('idx_sales_created_at', 'created_at'),
+    )
 
     def __repr__(self):
         return f"<SalesOrderModel(id={self.id}, customer={self.customer_name})>"

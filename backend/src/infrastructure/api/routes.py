@@ -22,6 +22,39 @@ from .dependencies import get_inventory_service
 from .security import get_api_key
 
 
+# File upload validation
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+ALLOWED_EXTENSIONS = {'.pdf', '.jpg', '.jpeg', '.png'}
+
+async def validate_upload_file(file: UploadFile) -> bytes:
+    """
+    Validates file size and type.
+    Returns file content if valid, raises HTTPException otherwise.
+    """
+    if not file:
+        return None
+    
+    # Validate extension
+    import os
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File type '{ext}' not allowed. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+    
+    # Read and validate size
+    content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File too large ({len(content) / 1024 / 1024:.1f}MB). Maximum size: {MAX_FILE_SIZE / 1024 / 1024}MB"
+        )
+    
+    await file.seek(0)  # Reset for later use
+    return content
+
+
 router = APIRouter(
     tags=["Products"],
     dependencies=[Depends(get_api_key)]
@@ -35,17 +68,21 @@ router = APIRouter(
     description="Retorna el historial completo de entradas y salidas para trazabilidad"
 )
 def get_movements(
-    inv_service: Annotated[InventoryService, Depends(get_inventory_service)]
+    inv_service: Annotated[InventoryService, Depends(get_inventory_service)],
+    skip: int = 0,
+    limit: int = 100
 ) -> list[MovementResponse]:
-    movements = inv_service.get_movements()
+    movements = inv_service.get_movements(skip=skip, limit=limit)
     return [MovementResponse.model_validate(m) for m in movements]
 
 
 @router.get("", response_model=list[ProductResponse])
 async def list_products(
-    inv_service: Annotated[InventoryService, Depends(get_inventory_service)]
+    inv_service: Annotated[InventoryService, Depends(get_inventory_service)],
+    skip: int = 0,
+    limit: int = 100
 ) -> list[ProductResponse]:
-    products = inv_service.list_products()
+    products = inv_service.list_products(skip=skip, limit=limit)
     return [ProductResponse.model_validate(p) for p in products]
 
 
@@ -84,6 +121,12 @@ async def create_product(
     image_file: Optional[UploadFile] = File(None),
     tech_sheet_file: Optional[UploadFile] = File(None)
 ) -> ProductResponse:
+    # Validate uploaded files
+    if image_file:
+        await validate_upload_file(image_file)
+    if tech_sheet_file:
+        await validate_upload_file(tech_sheet_file)
+    
     image_path = None
     tech_sheet_path = None
 
@@ -195,6 +238,10 @@ async def patch_product(
     initial_reference: Optional[str] = Form(None),
     tech_sheet_file: Optional[UploadFile] = File(None)
 ) -> ProductResponse:
+    # Validate uploaded file
+    if tech_sheet_file:
+        await validate_upload_file(tech_sheet_file)
+    
     document_path = None
     if tech_sheet_file:
         import os
@@ -205,8 +252,6 @@ async def patch_product(
             content = await tech_sheet_file.read()
             buffer.write(content)
 
-    print(f"DEBUG: patch_product called for {product_id}")
-    print(f"DEBUG: is_preorder received={is_preorder} type={type(is_preorder)}")
     try:
         from decimal import Decimal
         # Preparar kwargs para campos de producto
@@ -270,7 +315,10 @@ async def receive_stock(
     parent_id: Optional[UUID] = Form(None),
     file: Optional[UploadFile] = File(None)
 ) -> ProductResponse:
-    print(f"DEBUG: receive_stock called. is_return: {is_return}, parent_id: {parent_id}, File: {file.filename if file else 'None'}")
+    # Validate uploaded file
+    if file:
+        await validate_upload_file(file)
+    
     document_path = None
     if file:
         import os
@@ -326,6 +374,10 @@ async def sell_product(
     sales_order_id: Optional[UUID] = Form(None),
     file: Optional[UploadFile] = File(None)
 ) -> ProductResponse:
+    # Validate uploaded file
+    if file:
+        await validate_upload_file(file)
+    
     document_path = None
     if file:
         import os

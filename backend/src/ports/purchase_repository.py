@@ -9,7 +9,7 @@ class PurchaseRepository(ABC):
         pass
     
     @abstractmethod
-    def get_suppliers(self) -> List[Supplier]:
+    def get_suppliers(self, skip: int = 0, limit: int = 100) -> List[Supplier]:
         pass
     
     @abstractmethod
@@ -17,7 +17,7 @@ class PurchaseRepository(ABC):
         pass
     
     @abstractmethod
-    def get_purchase_orders(self) -> List[PurchaseOrder]:
+    def get_purchase_orders(self, skip: int = 0, limit: int = 100) -> List[PurchaseOrder]:
         pass
     
     @abstractmethod

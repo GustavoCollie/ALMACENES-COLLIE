@@ -46,8 +46,8 @@ class PurchaseService:
     def delete_supplier(self, id: UUID) -> bool:
         return self.repo.delete_supplier(id)
 
-    def list_suppliers(self) -> List[Supplier]:
-        return self.repo.get_suppliers()
+    def list_suppliers(self, skip: int = 0, limit: int = 100) -> List[Supplier]:
+        return self.repo.get_suppliers(skip=skip, limit=limit)
 
     def create_purchase_order(
         self, 
@@ -91,8 +91,8 @@ class PurchaseService:
         
         return self.repo.add_purchase_order(order)
 
-    def list_purchase_orders(self) -> List[PurchaseOrder]:
-        return self.repo.get_purchase_orders()
+    def list_purchase_orders(self, skip: int = 0, limit: int = 100) -> List[PurchaseOrder]:
+        return self.repo.get_purchase_orders(skip=skip, limit=limit)
     
     def get_order_pdf(self, order_id: UUID) -> str:
         """Generates PDF for order and returns file path"""
@@ -282,15 +282,6 @@ class PurchaseService:
                 if o.expected_delivery_date and o.actual_delivery_date <= o.expected_delivery_date
             ]
             on_time_rate = (len(on_time_orders) / len(finished_orders)) * 100
-
-        return PurchaseKPIs(
-            quality_rate=quality_rate,
-            total_cta=total_cta,
-            total_savings=total_savings,
-            on_time_delivery_rate=on_time_rate,
-            total_orders=total_orders,
-            rejected_orders=len(rejected_orders)
-        )
 
         return PurchaseKPIs(
             quality_rate=quality_rate,

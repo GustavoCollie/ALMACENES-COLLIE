@@ -11,6 +11,7 @@ Sistema de gestión de inventario profesional desarrollado con **FastAPI** sigui
 - **ReportLab**: Generación dinámica de reportes en PDF.
 - **SMTPLib**: Servicio de mensajería para notificaciones por correo.
 - **Pydantic**: Validación de esquemas y tipos de datos.
+- **SlowAPI**: Protección contra abusos mediante Rate Limiting.
 
 ### Frontend
 - **React.js**: Biblioteca para la interfaz de usuario.
@@ -64,6 +65,11 @@ Al registrar una salida de almacén, el sistema genera automáticamente un **Act
 - `POST /api/v1/products/{id}/sell`: Salida de mercancía (soporta flujos devolutivos y correos automáticos).
 - `GET /api/v1/products/movements`: Historial completo de trazabilidad.
 
+### 🛡️ Seguridad y Rendimiento (Nuevos)
+- **Rate Limiting**: Protección contra ataques de fuerza bruta en `/auth/login` y `/auth/register`.
+- **Paginación**: Todos los endpoints de listado soportan `skip` y `limit` para manejar grandes volúmenes de datos.
+- **Health Check**: Endpoint `/health` para monitoreo de estado.
+
 ### Autenticación
 - `POST /api/v1/auth/register`: Registro de nuevos usuarios.
 - `POST /api/v1/auth/login`: Obtención de token JWT.
@@ -81,6 +87,19 @@ Al registrar una salida de almacén, el sistema genera automáticamente un **Act
 3. Instalar dependencias: `pip install -r requirements.txt`.
 4. Ejecutar backend: `uvicorn src.main:app --reload`.
 5. Ejecutar frontend: `npm install && npm run dev`.
+
+### 🧪 Pruebas (Testing)
+El sistema incluye una suite de pruebas unitarias e integración:
+```powershell
+cd backend
+python -m pytest tests/
+```
+
+### 🔐 Seguridad en Producción
+Para entornos de producción, asegúrese de:
+1. Generar llaves únicas ejecutando: `python scripts/generate_secrets.py`.
+2. Configurar `ALLOWED_ORIGINS` con los dominios reales en el `.env`.
+3. Utilizar un servicio SMTP real (se recomienda configurar TLS en puerto 587).
 
 ---
 Desarrollado para el control eficiente de almacenes y suministros.

@@ -10,18 +10,12 @@ export const usePurchasing = () => {
 
     const fetchData = async () => {
         try {
-            console.log("Fetching purchasing data...");
             setLoading(true);
             const [suppliersRes, ordersRes, kpisRes] = await Promise.all([
                 purchasingService.getSuppliers(),
                 purchasingService.getOrders(),
                 purchasingService.getKPIs()
             ]);
-            console.log("Purchasing data fetched successfully:", {
-                suppliers: suppliersRes.data.length,
-                orders: ordersRes.data.length,
-                kpis: kpisRes.data
-            });
             setSuppliers(suppliersRes.data);
             setOrders(ordersRes.data);
             setKpis(kpisRes.data);
@@ -31,7 +25,6 @@ export const usePurchasing = () => {
             setError('Error al cargar datos de compras. Verifique la conexión con el servidor.');
         } finally {
             setLoading(false);
-            console.log("Purchasing loading finished.");
         }
     };
 

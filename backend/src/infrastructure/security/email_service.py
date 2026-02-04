@@ -22,13 +22,14 @@ class SMTPEmailService(EmailService):
         logger.info(f"SMTPEmailService initialized: host={self.host}, port={self.port}, user={self.user}, sender={self.sender}")
 
     async def send_verification_email(self, email: str, token: str):
+        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
         subject = "Verifica tu cuenta de Inventario"
         body_html = f"""
         <html>
             <body>
                 <h2>Bienvenido a Collie Almacenes</h2>
                 <p>Haz clic en el siguiente botón para verificar tu cuenta:</p>
-                <a href="http://localhost:5173/verify?token={token}" 
+                <a href="{frontend_url}/verify?token={token}" 
                    style="background-color: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
                    Verificar Cuenta
                 </a>

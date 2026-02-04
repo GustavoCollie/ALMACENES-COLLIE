@@ -52,8 +52,12 @@ def create_supplier(
     return SupplierResponse.model_validate(supplier)
 
 @router.get("/suppliers", response_model=List[SupplierResponse])
-def list_suppliers(service: Annotated[PurchaseService, Depends(get_purchase_service)]):
-    return service.list_suppliers()
+def list_suppliers(
+    service: Annotated[PurchaseService, Depends(get_purchase_service)],
+    skip: int = 0,
+    limit: int = 100
+):
+    return service.list_suppliers(skip=skip, limit=limit)
 
 @router.patch("/suppliers/{supplier_id}", response_model=SupplierResponse)
 def update_supplier(
@@ -99,8 +103,12 @@ def create_order(
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/orders", response_model=List[PurchaseOrderResponse])
-def list_orders(service: Annotated[PurchaseService, Depends(get_purchase_service)]):
-    orders = service.list_purchase_orders()
+def list_orders(
+    service: Annotated[PurchaseService, Depends(get_purchase_service)],
+    skip: int = 0,
+    limit: int = 100
+):
+    orders = service.list_purchase_orders(skip=skip, limit=limit)
     return [PurchaseOrderResponse.model_validate(o) for o in orders]
 
 @router.get("/orders/{order_id}/pdf")

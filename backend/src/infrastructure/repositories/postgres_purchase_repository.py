@@ -35,12 +35,12 @@ class PostgresPurchaseRepository(PurchaseRepository):
         self.session.refresh(model)
         return self._to_supplier_entity(model)
 
-    def get_suppliers(self) -> List[Supplier]:
+    def get_suppliers(self, skip: int = 0, limit: int = 100) -> List[Supplier]:
         # Eager load products and purchase_orders -> product to avoid N+1 and ensure data availability
         models = self.session.query(SupplierModel).options(
             joinedload(SupplierModel.products),
             joinedload(SupplierModel.purchase_orders).joinedload(PurchaseOrderModel.product)
-        ).all()
+        ).offset(skip).limit(limit).all()
         
         return [self._to_supplier_entity(m) for m in models]
 
@@ -127,8 +127,8 @@ class PostgresPurchaseRepository(PurchaseRepository):
         self.session.commit()
         return order
 
-    def get_purchase_orders(self) -> List[PurchaseOrder]:
-        models = self.session.query(PurchaseOrderModel).all()
+    def get_purchase_orders(self, skip: int = 0, limit: int = 100) -> List[PurchaseOrder]:
+        models = self.session.query(PurchaseOrderModel).offset(skip).limit(limit).all()
         orders = []
         for m in models:
             orders.append(self._to_entity(m))

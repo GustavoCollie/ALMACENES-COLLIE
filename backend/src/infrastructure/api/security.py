@@ -16,7 +16,12 @@ async def get_api_key(
     Validates the API Key from the request header.
     """
     # Get API Key from environment or use default for dev
-    expected_api_key = os.getenv("API_KEY", "dev-secret-key")
+    expected_api_key = os.getenv("API_KEY")
+    if not expected_api_key:
+        raise RuntimeError(
+            "API_KEY environment variable is required. "
+            "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(32))\""
+        )
     
     if not api_key_header:
          raise HTTPException(

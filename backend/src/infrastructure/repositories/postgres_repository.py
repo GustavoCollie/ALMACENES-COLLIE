@@ -155,11 +155,11 @@ class PostgreSQLProductRepository:
         
         return self._to_entity(model)
 
-    def find_all(self) -> list[Product]:
+    def find_all(self, skip: int = 0, limit: int = 100) -> list[Product]:
         """
-        Busca todos los productos en la base de datos.
+        Busca todos los productos en la base de datos con paginación.
         """
-        models = self._session.query(ProductModel).all()
+        models = self._session.query(ProductModel).offset(skip).limit(limit).all()
         return [self._to_entity(m) for m in models]
 
     def delete(self, product_id: UUID) -> bool:
@@ -198,13 +198,14 @@ class PostgreSQLProductRepository:
         self._session.commit()
         return movement
 
-    def find_all_movements(self) -> list['Movement']:
+    def find_all_movements(self, skip: int = 0, limit: int = 100) -> list['Movement']:
         """
-        Busca todos los movimientos en la base de datos.
+        Busca todos los movimientos en la base de datos con paginación.
         """
         models = self._session.query(MovementModel)\
             .options(joinedload(MovementModel.product))\
             .order_by(MovementModel.date.desc())\
+            .offset(skip).limit(limit)\
             .all()
         return [self._movement_to_entity(m) for m in models]
 

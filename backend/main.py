@@ -176,14 +176,15 @@ else:
 
 
 @app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
+async def global_exception_handler(request: Request, exc: Exception):
     """Global exception handler for unexpected errors."""
     logger.error(f"Unexpected error: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
         content={
             "error": "Internal Server Error",
-            "message": "Start request failed. Please check logs for details."
+            "message": str(exc),
+            "type": type(exc).__name__
         }
     )
 

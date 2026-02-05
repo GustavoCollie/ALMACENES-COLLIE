@@ -15,24 +15,24 @@ router = APIRouter(tags=["Auth"])
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("5 per hour")
 async def register(
-    request: UserCreate,
+    user_data: UserCreate,
     api_request: Request,
     service: AuthService = Depends(get_auth_service)
 ):
     try:
-        return await service.register_user(request)
+        return await service.register_user(user_data)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/login", response_model=Token)
 @limiter.limit("10 per hour")
 async def login(
-    request: UserLogin,
+    login_data: UserLogin,
     api_request: Request,
     service: AuthService = Depends(get_auth_service)
 ):
     try:
-        return await service.authenticate_user(request)
+        return await service.authenticate_user(login_data)
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
 

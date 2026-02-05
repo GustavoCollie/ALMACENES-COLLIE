@@ -30,12 +30,17 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
-# Add a file handler for debugging tracebacks
-file_handler = logging.FileHandler("app_debug.log", encoding='utf-8')
-file_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
-logger.addHandler(file_handler)
-# Also add to the root logger to catch everything
-logging.getLogger().addHandler(file_handler)
+
+# Only add file handler if NOT on Vercel
+if not os.getenv("VERCEL"):
+    try:
+        file_handler = logging.FileHandler("app_debug.log", encoding='utf-8')
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+        logger.addHandler(file_handler)
+        # Also add to the root logger to catch everything
+        logging.getLogger().addHandler(file_handler)
+    except Exception:
+        pass # Fallback if file isn't writable locally
 
 
 @asynccontextmanager

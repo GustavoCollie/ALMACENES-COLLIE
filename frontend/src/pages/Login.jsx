@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Package, AlertTriangle } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const RAW_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = RAW_URL.replace(/\/api\/v1\/?$/, '');
 
 export default function Login() {
     const [email, setEmail] = useState('');

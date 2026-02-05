@@ -71,15 +71,20 @@ async def lifespan(app: FastAPI):
             logger.info("Database initialized successfully")
         except Exception as e:
             logger.error(f"Failed to initialize database: {e}", exc_info=True)
-            raise
+            if not os.getenv("VERCEL"):
+                raise
+            # On Vercel, allow startup even if DB fails, so we can see the logs/health check
 
-        # Start scheduler
-        try:
-            from src.infrastructure.services.scheduler_service import scheduler_service
-            scheduler_service.start()
-            logger.info("Scheduler started")
-        except Exception as e:
-            logger.warning(f"Failed to start scheduler (non-critical): {e}")
+        # Start scheduler (SKIP on Vercel to prevent thread issues)
+        if not os.getenv("VERCEL"):
+            try:
+                from src.infrastructure.services.scheduler_service import scheduler_service
+                scheduler_service.start()
+                logger.info("Scheduler started")
+            except Exception as e:
+                logger.warning(f"Failed to start scheduler (non-critical): {e}")
+        else:
+            logger.info("Skipping Scheduler startup on Vercel Environment.")
         
         logger.info("Startup sequence completed")
         yield

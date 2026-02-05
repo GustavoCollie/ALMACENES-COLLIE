@@ -17,7 +17,7 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
-from .infrastructure.api.limiter import limiter
+from src.infrastructure.api.limiter import limiter
 
 from src.infrastructure.api.routes import router as products_router
 from src.infrastructure.api.auth_routes import router as auth_router

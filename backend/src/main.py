@@ -17,12 +17,12 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
-from .infrastructure.api.limiter import limiter
+# from .infrastructure.api.limiter import limiter
 
-from src.infrastructure.api.routes import router as products_router
-from src.infrastructure.api.auth_routes import router as auth_router
-from src.infrastructure.api.purchase_routes import router as purchase_router
-from src.infrastructure.api.sales_routes import router as sales_router
+# from src.infrastructure.api.routes import router as products_router
+# from src.infrastructure.api.auth_routes import router as auth_router
+# from src.infrastructure.api.purchase_routes import router as purchase_router
+# from src.infrastructure.api.sales_routes import router as sales_router
 
 # Configure logging
 logging.basicConfig(
@@ -130,7 +130,7 @@ app = FastAPI(
     },
     lifespan=lifespan
 )
-app.state.limiter = limiter
+# app.state.limiter = limiter
 # app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # app.add_middleware(SlowAPIMiddleware)
 
@@ -161,14 +161,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(products_router, prefix="/api/v1/products")
-app.include_router(auth_router, prefix="/api/v1/auth")
-app.include_router(purchase_router, prefix="/api/v1/purchasing")
-app.include_router(sales_router, prefix="/api/v1/sales")
+# app.include_router(products_router, prefix="/api/v1/products")
+# app.include_router(auth_router, prefix="/api/v1/auth")
+# app.include_router(purchase_router, prefix="/api/v1/purchasing")
+# app.include_router(sales_router, prefix="/api/v1/sales")
 from src.infrastructure.api.analytics_routes import router as analytics_router
-app.include_router(analytics_router, prefix="/api/v1/analytics")
+# app.include_router(analytics_router, prefix="/api/v1/analytics")
 from src.infrastructure.api.public_routes import router as public_router
-app.include_router(public_router, prefix="/api/v1/public")
+# app.include_router(public_router, prefix="/api/v1/public")
 
 # Servir archivos estáticos para documentos subidos
 if not os.getenv("VERCEL"):

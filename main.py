@@ -1,12 +1,5 @@
-from fastapi import FastAPI
-import os
-
-app = FastAPI()
-
-@app.get("/health")
-def health():
-    return {"status": "alive", "cwd": os.getcwd()}
-
-@app.get("/")
-def root():
-    return {"message": "Hello Codebase!"}
+def app(environ, start_response):
+    status = '200 OK'
+    response_headers = [('Content-type', 'application/json')]
+    start_response(status, response_headers)
+    return [b'{"message": "Hello Raw WSGI"}']

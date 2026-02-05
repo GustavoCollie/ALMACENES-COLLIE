@@ -37,8 +37,16 @@ if DATABASE_URL.startswith("sqlite"):
             DATABASE_URL = f"sqlite:///{abs_db_path}"
     engine_kwargs["connect_args"] = {"check_same_thread": False}
 else:
-    engine_kwargs["pool_size"] = 10
-    engine_kwargs["max_overflow"] = 20
+    # Optimized for PostgreSQL (Supabase)
+    if os.getenv("VERCEL") or os.getenv("SERVERLESS"):
+        # On Vercel (Serverless), we don't want local pooling. 
+        # We rely on Supabase's transaction pooler (port 6543).
+        from sqlalchemy.pool import NullPool
+        engine_kwargs["poolclass"] = NullPool
+    else:
+        # Standard pooling for local/persistent servers
+        engine_kwargs["pool_size"] = 5
+        engine_kwargs["max_overflow"] = 10
 
 engine = create_engine(DATABASE_URL, **engine_kwargs)
 
@@ -82,5 +90,11 @@ def init_db():
     
     Esta función debe llamarse al inicio de la aplicación.
     """
+    # En Vercel/Producción, es mejor no intentar crear tablas en cada arranque para evitar errores de conexión.
+    # El usuario debe haber inicializado la DB previamente o usar un script de migración.
+    if os.getenv("VERCEL") and os.getenv("REPOSITORY_TYPE") == "postgres":
+        print("Running on Vercel: Skipping automatic table creation (ensure DB is initialized)")
+        return
+
     from .models import ProductModel, UserModel, MovementModel, SupplierModel, PurchaseOrderModel, SalesOrderModel  # Import aquí para evitar circular imports
     Base.metadata.create_all(bind=engine)

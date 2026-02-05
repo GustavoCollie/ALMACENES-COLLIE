@@ -14,11 +14,11 @@ You have already provided the project details. Ensure the following environment 
 2. Select the `backend` folder as the root for the backend project (if deploying separately) or use monorepo settings.
 3. Configure the following **Environment Variables** in Vercel:
    - `REPOSITORY_TYPE`: `postgres`
-   - `DATABASE_URL`: Su URL de Supabase. **IMPORTANTE**: Use la URL del **Transaction Pooler** (Puerto 6543) para Vercel.
+   - `DATABASE_URL`: Su URL de Supabase. **IMPORTANTE**: Use la URL del **Transaction Pooler** (Puerto 6543) para Vercel (SIN `?pgbouncer=true`).
    - `SECRET_KEY`: Genere una clave segura (ej: `python scripts/generate_secrets.py`).
    - `API_KEY`: Genere una clave segura para la administración (ej: `dev-secret-key-123`).
    - `ALLOWED_ORIGINS`: Lista separada por comas de tus URLs de frontend. **IMPORTANTE**: Incluye todas las variantes.
-     - Ejemplo: `https://almacenes-collie-i8u8.vercel.app,https://colliealmacenes.vercel.app`
+     - Ejemplo: `https://almacenes-collie-i8u8.vercel.app,https://collie-almacenes.vercel.app`
    - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`: For email notifications.
 
 ## 3. Despliegue del Frontend (Administración) en Vercel

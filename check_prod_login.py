@@ -18,10 +18,11 @@ try:
     print(f"Status Code: {response.status_code}")
     try:
         data = response.json()
-        print(f"Error Type: {data.get('type')}")
-        print(f"Error Message: {data.get('message')}")
+        print(f"ERR_TYPE: {data.get('type')}")
+        print(f"ERR_MSG: {data.get('message')}")
+        print(f"ERR_DETAIL: {data.get('detail')}")
     except:
-        print("Raw Response:", response.text)
+        print("RAW_RESP:", response.text[:200])
         
     if response.status_code == 200:
         print("\n✅ LOGIN SUCCESS! Backend and DB are 100% working.")

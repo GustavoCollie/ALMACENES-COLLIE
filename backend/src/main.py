@@ -58,7 +58,8 @@ async def lifespan(app: FastAPI):
         if missing:
             error_msg = f"Missing required environment variables: {', '.join(missing)}"
             logger.error(error_msg)
-            raise RuntimeError(error_msg)
+            if not os.getenv("VERCEL"):
+                raise RuntimeError(error_msg)
         
         repo_type = os.getenv('REPOSITORY_TYPE', 'memory')
         logger.info(f"Repository mode: {repo_type}")

@@ -210,7 +210,15 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "timestamp": time.time()}
+    db_url = os.getenv("DATABASE_URL", "")
+    db_host = "not-found"
+    if "@" in db_url:
+        db_host = db_url.split("@")[1].split(":")[0].split("/")[0]
+    return {
+        "status": "healthy", 
+        "timestamp": time.time(),
+        "db_host": db_host
+    }
 
 @app.get("/ping")
 def ping():

@@ -132,18 +132,23 @@ async def create_product(
 
     import os
     from decimal import Decimal
-    upload_dir = "uploads/products"
-    os.makedirs(f"{upload_dir}/images", exist_ok=True)
-    os.makedirs(f"{upload_dir}/specs", exist_ok=True)
+    
+    # Use /tmp on Vercel, otherwise local uploads/
+    is_vercel = os.getenv("VERCEL") == "1"
+    base_upload_dir = "/tmp/uploads" if is_vercel else "uploads"
+    
+    # Ensure directories exist
+    os.makedirs(f"{base_upload_dir}/products/images", exist_ok=True)
+    os.makedirs(f"{base_upload_dir}/products/specs", exist_ok=True)
 
     if image_file:
-        image_path = f"{upload_dir}/images/{uuid.uuid4()}_{image_file.filename}"
+        image_path = f"{base_upload_dir}/products/images/{uuid.uuid4()}_{image_file.filename}"
         with open(image_path, "wb") as buffer:
             content = await image_file.read()
             buffer.write(content)
 
     if tech_sheet_file:
-        tech_sheet_path = f"{upload_dir}/specs/{uuid.uuid4()}_{tech_sheet_file.filename}"
+        tech_sheet_path = f"{base_upload_dir}/products/specs/{uuid.uuid4()}_{tech_sheet_file.filename}"
         with open(tech_sheet_path, "wb") as buffer:
             content = await tech_sheet_file.read()
             buffer.write(content)
@@ -172,7 +177,10 @@ async def create_product(
         )
         return ProductResponse.model_validate(product)
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Error creating product: {error_details}")
+        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
 
 
 @router.get(
@@ -245,7 +253,10 @@ async def patch_product(
     document_path = None
     if tech_sheet_file:
         import os
-        upload_dir = "uploads/documents"
+        is_vercel = os.getenv("VERCEL") == "1"
+        base_upload_dir = "/tmp/uploads" if is_vercel else "uploads"
+        
+        upload_dir = f"{base_upload_dir}/documents"
         os.makedirs(upload_dir, exist_ok=True)
         document_path = f"{upload_dir}/{uuid.uuid4()}_{tech_sheet_file.filename}"
         with open(document_path, "wb") as buffer:
@@ -322,7 +333,10 @@ async def receive_stock(
     document_path = None
     if file:
         import os
-        upload_dir = "uploads/documents"
+        is_vercel = os.getenv("VERCEL") == "1"
+        base_upload_dir = "/tmp/uploads" if is_vercel else "uploads"
+        
+        upload_dir = f"{base_upload_dir}/documents"
         os.makedirs(upload_dir, exist_ok=True)
         document_path = f"{upload_dir}/{uuid.uuid4()}_{file.filename}"
         with open(document_path, "wb") as buffer:
@@ -381,7 +395,10 @@ async def sell_product(
     document_path = None
     if file:
         import os
-        upload_dir = "uploads/documents"
+        is_vercel = os.getenv("VERCEL") == "1"
+        base_upload_dir = "/tmp/uploads" if is_vercel else "uploads"
+        
+        upload_dir = f"{base_upload_dir}/documents"
         os.makedirs(upload_dir, exist_ok=True)
         document_path = f"{upload_dir}/{uuid.uuid4()}_{file.filename}"
         with open(document_path, "wb") as buffer:

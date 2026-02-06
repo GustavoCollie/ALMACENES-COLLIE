@@ -12,7 +12,7 @@ except ImportError:
     HAS_PASSLIB = False
 
 # Configuration
-# URL from backend/.env which seems to be the one used in production
+# Checking project wbjikwsuakjrcokgklxl
 DATABASE_URL = "postgresql://postgres:ZksWew7slD1h1Ais@db.wbjikwsuakjrcokgklxl.supabase.co:5432/postgres"
 EMAIL = "hello@collievalley.com"
 PASSWORD = "Gustavito2601"
@@ -31,10 +31,11 @@ def diagnose():
     
     try:
         with engine.connect() as conn:
-            print("\n--- [1] Checking Tables ---")
-            res = conn.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"))
-            tables = [row[0] for row in res.fetchall()]
-            print(f"Tables found: {', '.join(tables)}")
+            print("\n--- [1] Checking Tables in all schemas ---")
+            res = conn.execute(text("SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema NOT IN ('information_schema', 'pg_catalog')"))
+            tables = [f"{row[0]}.{row[1]}" for row in res.fetchall()]
+            print(f"Total tables found: {len(tables)}")
+            print(f"Tables: {', '.join(tables)}")
             
             if 'users' not in tables:
                 print("\n❌ Table 'users' MISSING! Creating it now...")

@@ -17,7 +17,15 @@ export const ProductForm = ({ onSubmit, onClose, initialData, inline = false }) 
     });
     const [imageFile, setImageFile] = useState(null);
     const [techSheetFile, setTechSheetFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState(() => {
+        if (initialData?.image_path) {
+            if (initialData.image_path.startsWith('http')) return initialData.image_path;
+            const base = (import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1').replace('/api/v1', '');
+            const clean = initialData.image_path.startsWith('/') ? initialData.image_path.slice(1) : initialData.image_path;
+            return `${base}/${clean}`;
+        }
+        return null;
+    });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 

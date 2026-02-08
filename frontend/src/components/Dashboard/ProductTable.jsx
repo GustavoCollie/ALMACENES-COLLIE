@@ -2,6 +2,14 @@ import React from 'react';
 import { Plus, Trash2, Edit, ShoppingCart, Box, AlertTriangle, MoreVertical, Package, Clock, Lock, CalendarCheck } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
+const getImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    const base = (import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1').replace('/api/v1', '');
+    const clean = path.startsWith('/') ? path.slice(1) : path;
+    return `${base}/${clean}`;
+};
+
 export const ProductTable = ({ products, purchaseOrders = [], onReturn, onEdit, onDelete, onSell, loading }) => {
     if (loading) {
         return (
@@ -59,8 +67,12 @@ export const ProductTable = ({ products, purchaseOrders = [], onReturn, onEdit, 
                             <tr key={product.id} className={cn("hover:bg-[#f8f9fa] transition-colors", isPreorder && "bg-[#f3e8ff]/30")}>
                                 <td className="font-['Outfit']">
                                     <div className="flex items-center space-x-4">
-                                        <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center", isPreorder ? "bg-violet-100 text-violet-600" : "bg-[#f1f3f4] text-[#5f6368]")}>
-                                            {isPreorder ? <Clock size={20} /> : <Package size={20} />}
+                                        <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden", isPreorder ? "bg-violet-100 text-violet-600" : "bg-[#f1f3f4] text-[#5f6368]")}>
+                                            {product.image_path ? (
+                                                <img src={getImageUrl(product.image_path)} alt={product.name} className="w-10 h-10 rounded-lg object-cover" />
+                                            ) : (
+                                                isPreorder ? <Clock size={20} /> : <Package size={20} />
+                                            )}
                                         </div>
                                         <div className="flex flex-col">
                                             <div className="flex items-center space-x-2">

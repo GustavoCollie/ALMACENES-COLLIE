@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, ShoppingCart, User, Mail, Package, DollarSign, Calendar, Truck, CreditCard } from 'lucide-react';
 
 export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialData }) => {
+    const isFromOrder = !!initialData;
     const [formData, setFormData] = useState({
         customer_name: initialData?.customer_name || '',
         customer_email: initialData?.customer_email || '',
@@ -73,7 +74,8 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                                     type="text"
                                     value={formData.customer_name}
                                     onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
-                                    className="google-input google-input-icon"
+                                    readOnly={isFromOrder}
+                                    className={`google-input google-input-icon ${isFromOrder ? 'bg-gray-50 cursor-not-allowed opacity-70' : ''}`}
                                     placeholder="Nombre del cliente"
                                 />
                             </div>
@@ -87,7 +89,8 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                                     type="email"
                                     value={formData.customer_email}
                                     onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
-                                    className="google-input google-input-icon"
+                                    readOnly={isFromOrder}
+                                    className={`google-input google-input-icon ${isFromOrder ? 'bg-gray-50 cursor-not-allowed opacity-70' : ''}`}
                                     placeholder="email@ejemplo.com"
                                 />
                             </div>
@@ -104,10 +107,11 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                                     required
                                     value={formData.product_id}
                                     onChange={(e) => setFormData({ ...formData, product_id: e.target.value })}
-                                    className="google-input google-input-icon appearance-none"
+                                    disabled={isFromOrder}
+                                    className={`google-input google-input-icon appearance-none ${isFromOrder ? 'bg-gray-50 cursor-not-allowed opacity-70' : ''}`}
                                 >
                                     <option value="">Seleccionar producto...</option>
-                                    {products.filter(p => p.stock > 0).map(p => (
+                                    {(isFromOrder ? products : products.filter(p => p.stock > 0)).map(p => (
                                         <option key={p.id} value={p.id}>{p.name} (Stock: {p.stock} {p.stock_unit || 'und'})</option>
                                     ))}
                                 </select>
@@ -124,7 +128,8 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                                     max={selectedProduct?.stock}
                                     value={formData.quantity}
                                     onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                                    className="google-input"
+                                    readOnly={isFromOrder}
+                                    className={`google-input ${isFromOrder ? 'bg-gray-50 cursor-not-allowed opacity-70' : ''}`}
                                 />
                             </div>
                             <div className="space-y-1.5">
@@ -137,7 +142,8 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                                         step="0.01"
                                         value={formData.unit_price}
                                         onChange={(e) => setFormData({ ...formData, unit_price: e.target.value })}
-                                        className="google-input google-input-icon"
+                                        readOnly={isFromOrder}
+                                        className={`google-input google-input-icon ${isFromOrder ? 'bg-gray-50 cursor-not-allowed opacity-70' : ''}`}
                                         placeholder="0.00"
                                     />
                                 </div>
@@ -152,16 +158,18 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                             <div className="flex items-center space-x-2 p-1 bg-[#f1f3f4] rounded-lg">
                                 <button
                                     type="button"
-                                    onClick={() => setFormData({ ...formData, shipping_type: 'PICKUP', shipping_cost: 0 })}
-                                    className={`flex-1 flex items-center justify-center space-x-2 py-2 rounded-md text-xs font-medium transition-all ${formData.shipping_type === 'PICKUP' ? 'bg-white shadow-sm text-[#1a73e8]' : 'text-[#5f6368]'}`}
+                                    onClick={() => !isFromOrder && setFormData({ ...formData, shipping_type: 'PICKUP', shipping_cost: 0 })}
+                                    disabled={isFromOrder}
+                                    className={`flex-1 flex items-center justify-center space-x-2 py-2 rounded-md text-xs font-medium transition-all ${formData.shipping_type === 'PICKUP' ? 'bg-white shadow-sm text-[#1a73e8]' : 'text-[#5f6368]'} ${isFromOrder ? 'cursor-not-allowed opacity-70' : ''}`}
                                 >
                                     <Package size={14} />
                                     <span>Recojo en Almacén</span>
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => setFormData({ ...formData, shipping_type: 'DELIVERY' })}
-                                    className={`flex-1 flex items-center justify-center space-x-2 py-2 rounded-md text-xs font-medium transition-all ${formData.shipping_type === 'DELIVERY' ? 'bg-white shadow-sm text-[#1a73e8]' : 'text-[#5f6368]'}`}
+                                    onClick={() => !isFromOrder && setFormData({ ...formData, shipping_type: 'DELIVERY' })}
+                                    disabled={isFromOrder}
+                                    className={`flex-1 flex items-center justify-center space-x-2 py-2 rounded-md text-xs font-medium transition-all ${formData.shipping_type === 'DELIVERY' ? 'bg-white shadow-sm text-[#1a73e8]' : 'text-[#5f6368]'} ${isFromOrder ? 'cursor-not-allowed opacity-70' : ''}`}
                                 >
                                     <Truck size={14} />
                                     <span>Delivery / Envío</span>

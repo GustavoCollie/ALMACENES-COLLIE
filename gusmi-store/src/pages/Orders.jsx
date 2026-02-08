@@ -7,8 +7,7 @@ import {
     CreditCard, User as UserIcon, Mail, Calendar, Hash, Globe
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace('/api/v1/public', '');
+import { getImageUrl } from '../utils/imageUtils';
 
 const OrderDetailModal = ({ order, onClose, statusDetails }) => {
     const ticketRef = useRef();
@@ -24,9 +23,7 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
         window.location.reload(); // To restore state
     };
 
-    const productImageUrl = order.product_image
-        ? `${API_BASE_URL}/${order.product_image}`
-        : null;
+    const productImageUrl = getImageUrl(order.product_image);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300">
@@ -385,9 +382,7 @@ const Orders = () => {
                     <div className="space-y-6">
                         {orders.map((order) => {
                             const status = getStatusDetails(order.status);
-                            const productImageUrl = order.product_image
-                                ? `${API_BASE_URL}/${order.product_image}`
-                                : null;
+                            const productImageUrl = getImageUrl(order.product_image);
 
                             return (
                                 <div key={order.id} className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden transform transition hover:scale-[1.01]">

@@ -1,6 +1,6 @@
 
 import requests
-BASE_URL = "https://almacenes-collie.vercel.app"
+BASE_URL = "https://gusmi-store.vercel.app"
 API_URL = f"{BASE_URL}/api/v1/public/products"
 
 r = requests.get(API_URL)

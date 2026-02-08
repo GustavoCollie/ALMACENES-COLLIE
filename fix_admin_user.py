@@ -6,7 +6,7 @@ import bcrypt
 
 DATABASE_URL = "postgresql://postgres:Dj3sMDnIv7qdQpp7@db.zinshpnfzneiduwvwesx.supabase.co:5432/postgres"
 
-EMAIL = "hello@collievalley.com"
+EMAIL = "hello@gusmi-store.com"
 USERNAME = "admin"
 PASSWORD = "Gustavito2601"
 

@@ -40,7 +40,7 @@ def run_sql():
         
         conn.execute(text("""
             INSERT INTO users (id, email, hashed_password, is_active, is_verified)
-            VALUES ('admin-uuid-1234', 'hello@collievalley.com', :h, TRUE, TRUE)
+            VALUES ('admin-uuid-1234', 'hello@gusmi-store.com', :h, TRUE, TRUE)
             ON CONFLICT (email) DO UPDATE SET hashed_password = EXCLUDED.hashed_password;
         """), {"h": h})
         

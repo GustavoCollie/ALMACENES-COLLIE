@@ -1,12 +1,12 @@
 import requests
 
-URL = "https://almacenes-collie.vercel.app/api/v1/auth/login"
+URL = "https://gusmi-store.vercel.app/api/v1/auth/login"
 HEADERS = {
     "Content-Type": "application/json",
     "X-API-Key": "26012025"
 }
 DATA = {
-    "email": "hello@collievalley.com",
+    "email": "hello@gusmi-store.com",
     "password": "Gustavito2601"
 }
 

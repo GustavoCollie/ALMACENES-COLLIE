@@ -46,7 +46,7 @@ try:
                 VALUES (:email, :username, :password_hash, TRUE, TRUE)
                 RETURNING id, email
             """), {
-                "email": "hello@collievalley.com",
+                "email": "hello@gusmi-store.com",
                 "username": "admin",
                 "password_hash": password_hash
             })

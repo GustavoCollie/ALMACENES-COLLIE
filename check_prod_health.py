@@ -2,7 +2,7 @@
 import requests
 import time
 
-URL = "https://almacenes-collie.vercel.app/api/health"
+URL = "https://gusmi-store.vercel.app/api/health"
 
 print(f"Checking health: {URL}")
 try:

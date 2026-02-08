@@ -37,7 +37,7 @@ def seed_production():
     # 2. Seed Admin User
     db = SessionLocal()
     try:
-        admin_email = "hello@collievalley.com"
+        admin_email = "hello@gusmi-store.com"
         existing_user = db.query(UserModel).filter(UserModel.email == admin_email).first()
         
         if not existing_user:
@@ -49,7 +49,7 @@ def seed_production():
                 id=str(os.urandom(16).hex()), # UUID as hex string or just string
                 email=admin_email,
                 hashed_password=hashed_pw,
-                full_name="Collie Admin",
+                full_name="GUSMI Admin",
                 is_active=True,
                 is_verified=True,
                 role="admin"  # Assuming role column exists or defaults

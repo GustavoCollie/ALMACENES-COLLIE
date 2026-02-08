@@ -15,7 +15,7 @@ try:
         result = conn.execute(text("""
             SELECT id, email, username, is_active, is_verified, hashed_password
             FROM users 
-            WHERE email = 'hello@collievalley.com'
+            WHERE email = 'hello@gusmi-store.com'
         """))
         
         user = result.fetchone()
@@ -42,7 +42,7 @@ try:
                 print(f"   'Gustavito2601' NO coincide con el hash")
         else:
             print(f"\n❌ Usuario NO encontrado en la base de datos")
-            print(f"   Email buscado: hello@collievalley.com")
+            print(f"   Email buscado: hello@gusmi-store.com")
             
         # Contar todos los usuarios
         result = conn.execute(text("SELECT COUNT(*) FROM users"))

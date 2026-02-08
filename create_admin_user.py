@@ -22,7 +22,7 @@ async def create_admin():
         auth_service = AuthService(user_repo)
         
         admin_data = UserCreate(
-            email="hello@collievalley.com",
+            email="hello@gusmi-store.com",
             password="Gustavito2601",
             username="admin"
         )
@@ -44,7 +44,7 @@ async def create_admin():
         print(f"   Email: {user.email}")
         print(f"   Username: {user.username}")
         print(f"\n🔑 Credenciales:")
-        print(f"   Email: hello@collievalley.com")
+        print(f"   Email: hello@gusmi-store.com")
         print(f"   Password: Gustavito2601")
         
     except Exception as e:

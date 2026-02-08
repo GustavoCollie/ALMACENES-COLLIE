@@ -22,7 +22,7 @@ async def test_login():
         auth_service = AuthService(user_repo)
         
         login_data = UserLogin(
-            email="hello@collievalley.com",
+            email="hello@gusmi-store.com",
             password="Gustavito2601"
         )
         

@@ -2,9 +2,9 @@
 import requests
 import json
 
-URL = "https://almacenes-collie.vercel.app/api/v1/auth/login"
+URL = "https://gusmi-store.vercel.app/api/v1/auth/login"
 DATA = {
-    "email": "hello@collievalley.com",
+    "email": "hello@gusmi-store.com",
     "password": "Gustavito2601"
 }
 HEADERS = {

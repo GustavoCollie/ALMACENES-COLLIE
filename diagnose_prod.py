@@ -14,7 +14,7 @@ except ImportError:
 # Configuration
 # Checking project wbjikwsuakjrcokgklxl
 DATABASE_URL = "postgresql://postgres:ZksWew7slD1h1Ais@db.wbjikwsuakjrcokgklxl.supabase.co:5432/postgres"
-EMAIL = "hello@collievalley.com"
+EMAIL = "hello@gusmi-store.com"
 PASSWORD = "Gustavito2601"
 
 if HAS_PASSLIB:

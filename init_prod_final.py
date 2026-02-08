@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 
 # Configuration
 DATABASE_URL = "postgresql://postgres:ZksWew7slD1h1Ais@db.wbjikwsuakjrcokgklxl.supabase.co:5432/postgres"
-EMAIL = "hello@collievalley.com"
+EMAIL = "hello@gusmi-store.com"
 PASSWORD = "Gustavito2601"
 
 # Ensure backend/src is in path

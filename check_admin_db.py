@@ -16,7 +16,7 @@ try:
         result = conn.execute(text("""
             SELECT id, email, username, hashed_password, is_active, is_verified
             FROM users 
-            WHERE email = 'hello@collievalley.com'
+            WHERE email = 'hello@gusmi-store.com'
         """))
         
         user = result.fetchone()

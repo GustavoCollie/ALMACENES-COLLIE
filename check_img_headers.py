@@ -1,7 +1,7 @@
 
 import requests
-API_URL = "https://almacenes-collie.vercel.app/api/v1/public/products"
-BASE_URL = "https://almacenes-collie.vercel.app"
+API_URL = "https://gusmi-store.vercel.app/api/v1/public/products"
+BASE_URL = "https://gusmi-store.vercel.app"
 r = requests.get(API_URL)
 if r.status_code == 200:
     for p in r.json():

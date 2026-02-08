@@ -101,7 +101,11 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                         {order.shipping_type === 'PICKUP' ? 'Recojo Presencial' : 'Delivery Local'}
                                     </div>
                                     {order.shipping_type === 'DELIVERY' && (
-                                        <p className="text-[10px] text-amber-600 font-black mt-1">Costo de delivery se paga al recibir</p>
+                                        <p className="text-[10px] text-amber-600 font-black mt-1">
+                                            {order.shipping_cost > 0
+                                                ? `Costo de envío: $${order.shipping_cost.toFixed(2)}`
+                                                : 'Costo de delivery pendiente de asignacion'}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -144,7 +148,11 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                             <div className="flex justify-between text-sm">
                                 <span className="text-gray-500">Envío</span>
                                 <span className={`${order.shipping_type === 'DELIVERY' ? 'text-amber-600 font-bold' : 'text-gray-900 font-medium'}`}>
-                                    {order.shipping_type === 'DELIVERY' ? 'Pago contra entrega' : 'Gratis'}
+                                    {order.shipping_type === 'PICKUP'
+                                        ? 'Gratis'
+                                        : order.shipping_cost > 0
+                                            ? `$${order.shipping_cost.toFixed(2)}`
+                                            : 'Pendiente de asignacion'}
                                 </span>
                             </div>
                             <div className="flex justify-between pt-3 border-t border-gray-100">
@@ -226,7 +234,13 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                     </div>
                                     <div className="flex justify-between text-[11px] italic text-gray-400">
                                         <span>ENVÍO:</span>
-                                        <span>{order.shipping_type === 'DELIVERY' ? 'PAGO AL RECIBIR' : 'GRATIS'}</span>
+                                        <span>
+                                            {order.shipping_type === 'PICKUP'
+                                                ? 'GRATIS'
+                                                : order.shipping_cost > 0
+                                                    ? `$${order.shipping_cost.toFixed(2)}`
+                                                    : 'PENDIENTE'}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between text-sm font-bold pt-2">
                                         <span>TOTAL:</span>
@@ -425,6 +439,11 @@ const Orders = () => {
                                                     <p className="text-sm font-bold text-primary-600">
                                                         {order.delivery_date ? new Date(order.delivery_date).toLocaleDateString('es-PE', { day: 'numeric', month: 'short' }) : 'Pendiente'}
                                                     </p>
+                                                    {order.shipping_type === 'DELIVERY' && order.shipping_cost > 0 && (
+                                                        <p className="text-[10px] text-amber-600 font-bold mt-0.5">
+                                                            Envío: ${order.shipping_cost.toFixed(2)}
+                                                        </p>
+                                                    )}
                                                 </div>
                                                 <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
                                                     <Clock className="w-5 h-5 text-primary-600" />

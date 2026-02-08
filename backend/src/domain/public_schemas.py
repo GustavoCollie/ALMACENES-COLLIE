@@ -80,6 +80,7 @@ class CreateCheckoutSessionRequest(BaseModel):
     customer_email: EmailStr
     customer_name: str
     shipping_address: Optional[str] = None
+    shipping_type: str = "PICKUP"
     apply_discount: bool = False
 
 

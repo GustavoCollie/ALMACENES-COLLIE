@@ -1,5 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { X, ShoppingCart, User, Mail, Package, DollarSign, Calendar, Truck, CreditCard } from 'lucide-react';
+import { X, ShoppingCart, User, Mail, Package, DollarSign, Calendar, Truck, CreditCard, MapPin } from 'lucide-react';
+
+const LATIN_AMERICAN_COUNTRIES = [
+    'Peru', 'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica',
+    'Cuba', 'Ecuador', 'El Salvador', 'Guatemala', 'Honduras', 'Mexico',
+    'Nicaragua', 'Panama', 'Paraguay', 'Republica Dominicana', 'Uruguay', 'Venezuela'
+];
+
+const LIMA_DISTRICTS = [
+    'Miraflores', 'San Borja', 'San Isidro', 'Surco', 'La Molina', 'Barranco',
+    'Chorrillos', 'Jesus Maria', 'Lince', 'Magdalena', 'Pueblo Libre', 'San Miguel',
+    'Breña', 'Cercado de Lima', 'Rimac', 'San Juan de Lurigancho',
+    'San Juan de Miraflores', 'Villa Maria del Triunfo', 'Villa El Salvador',
+    'Los Olivos', 'Independencia', 'Comas', 'San Martin de Porres', 'Ate',
+    'Santa Anita', 'El Agustino', 'La Victoria', 'Surquillo', 'San Luis',
+    'Chaclacayo', 'Lurigancho-Chosica', 'Cieneguilla', 'Pachacamac', 'Carabayllo',
+    'Puente Piedra', 'Ancon', 'Santa Rosa', 'Punta Negra', 'Punta Hermosa',
+    'San Bartolo', 'Lurin', 'Pucusana'
+];
+
+const PERU_DEPARTMENTS = [
+    'Arequipa', 'Cusco', 'Trujillo (La Libertad)', 'Piura', 'Chiclayo (Lambayeque)',
+    'Huancayo (Junin)', 'Iquitos (Loreto)', 'Tacna', 'Cajamarca', 'Puno',
+    'Ayacucho', 'Huanuco', 'Ica'
+];
 
 export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialData }) => {
     const isFromOrder = !!initialData;
@@ -12,7 +36,12 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
         shipping_cost: initialData?.shipping_cost || 0,
         shipping_type: initialData?.shipping_type || 'PICKUP',
         shipping_address: initialData?.shipping_address || '',
-        delivery_date: initialData?.delivery_date ? new Date(initialData.delivery_date).toISOString().split('T')[0] : ''
+        delivery_date: initialData?.delivery_date ? new Date(initialData.delivery_date).toISOString().split('T')[0] : '',
+        // Separate address fields for new orders
+        shipping_address_line: '',
+        shipping_district: '',
+        shipping_country: 'Peru',
+        shipping_postal_code: ''
     });
 
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -26,8 +55,22 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        let finalShippingAddress = formData.shipping_address;
+        // For new orders, concatenate the separate fields
+        if (!isFromOrder && formData.shipping_type === 'DELIVERY') {
+            const parts = [
+                formData.shipping_address_line,
+                formData.shipping_district,
+                formData.shipping_country,
+                formData.shipping_postal_code
+            ].filter(Boolean);
+            finalShippingAddress = parts.join(', ');
+        }
+
         onSubmit({
             ...formData,
+            shipping_address: finalShippingAddress,
             quantity: parseInt(formData.quantity),
             unit_price: parseFloat(formData.unit_price),
             shipping_cost: parseFloat(formData.shipping_cost),
@@ -38,6 +81,8 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
     const subtotal = (formData.quantity || 0) * (formData.unit_price || 0);
     const igv = subtotal * 0.18;
     const total = subtotal + igv + (parseFloat(formData.shipping_cost) || 0);
+
+    const isPeru = formData.shipping_country === 'Peru';
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#202124]/40 backdrop-blur-[2px] animate-fade-in">
@@ -54,7 +99,7 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                             </h3>
                             <p className="text-xs text-[#5f6368] mt-0.5 font-medium">
                                 {initialData
-                                    ? (formData.shipping_type === 'DELIVERY' ? 'Asignar costo de envío al pedido' : 'Modificar detalles de la venta')
+                                    ? (formData.shipping_type === 'DELIVERY' ? 'Asignar costo de envío y fecha de entrega' : 'Modificar detalles de la venta')
                                     : 'Registrar una nueva venta y programar despacho'}
                             </p>
                         </div>
@@ -192,23 +237,97 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                                 />
                             </div>
                         )}
+
+                        {/* Address fields: separate for new, readonly concatenated for existing */}
                         {formData.shipping_type === 'DELIVERY' && (
-                            <div className="space-y-1.5 md:col-span-2">
-                                <label className="text-[13px] font-medium text-[#202124] ml-1">Dirección de Entrega</label>
-                                <div className="relative group">
-                                    <Truck className="absolute left-3 top-2.5 text-[#5f6368] group-focus-within:text-[#1a73e8]" size={18} />
-                                    <input
-                                        required
-                                        type="text"
-                                        value={formData.shipping_address || ''}
-                                        onChange={(e) => setFormData({ ...formData, shipping_address: e.target.value })}
-                                        readOnly={isFromOrder}
-                                        className={`google-input google-input-icon ${isFromOrder ? 'bg-gray-50 cursor-not-allowed opacity-70' : ''}`}
-                                        placeholder="Dirección completa, Distrito, Referencia"
-                                    />
+                            isFromOrder ? (
+                                <div className="space-y-1.5 md:col-span-2">
+                                    <label className="text-[13px] font-medium text-[#202124] ml-1">Dirección de Entrega</label>
+                                    <div className="relative group">
+                                        <MapPin className="absolute left-3 top-2.5 text-[#5f6368]" size={18} />
+                                        <input
+                                            type="text"
+                                            value={formData.shipping_address || ''}
+                                            readOnly
+                                            className="google-input google-input-icon bg-gray-50 cursor-not-allowed opacity-70"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <>
+                                    <div className="space-y-1.5 md:col-span-2">
+                                        <label className="text-[13px] font-medium text-[#202124] ml-1">Dirección Exacta</label>
+                                        <div className="relative group">
+                                            <MapPin className="absolute left-3 top-2.5 text-[#5f6368] group-focus-within:text-[#1a73e8]" size={18} />
+                                            <input
+                                                required
+                                                type="text"
+                                                value={formData.shipping_address_line}
+                                                onChange={(e) => setFormData({ ...formData, shipping_address_line: e.target.value })}
+                                                className="google-input google-input-icon"
+                                                placeholder="Av. Ejemplo 123, Dpto 401..."
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[13px] font-medium text-[#202124] ml-1">Distrito / Ciudad</label>
+                                        {isPeru ? (
+                                            <select
+                                                required
+                                                value={formData.shipping_district}
+                                                onChange={(e) => setFormData({ ...formData, shipping_district: e.target.value })}
+                                                className="google-input appearance-none"
+                                            >
+                                                <option value="">Seleccionar...</option>
+                                                <optgroup label="Distritos de Lima">
+                                                    {LIMA_DISTRICTS.map(d => (
+                                                        <option key={d} value={d}>{d}</option>
+                                                    ))}
+                                                </optgroup>
+                                                <optgroup label="Departamentos">
+                                                    {PERU_DEPARTMENTS.map(d => (
+                                                        <option key={d} value={d}>{d}</option>
+                                                    ))}
+                                                </optgroup>
+                                            </select>
+                                        ) : (
+                                            <input
+                                                required
+                                                type="text"
+                                                value={formData.shipping_district}
+                                                onChange={(e) => setFormData({ ...formData, shipping_district: e.target.value })}
+                                                className="google-input"
+                                                placeholder="Ciudad o distrito"
+                                            />
+                                        )}
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[13px] font-medium text-[#202124] ml-1">País</label>
+                                        <select
+                                            required
+                                            value={formData.shipping_country}
+                                            onChange={(e) => setFormData({ ...formData, shipping_country: e.target.value, shipping_district: '' })}
+                                            className="google-input appearance-none"
+                                        >
+                                            {LATIN_AMERICAN_COUNTRIES.map(c => (
+                                                <option key={c} value={c}>{c}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-1.5 md:col-span-2">
+                                        <label className="text-[13px] font-medium text-[#202124] ml-1">Código Postal (opcional)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.shipping_postal_code}
+                                            onChange={(e) => setFormData({ ...formData, shipping_postal_code: e.target.value })}
+                                            className="google-input"
+                                            placeholder="Código postal"
+                                        />
+                                    </div>
+                                </>
+                            )
                         )}
+
                         <div className="space-y-1.5">
                             <label className="text-[13px] font-medium text-[#202124] ml-1">Fecha de Entrega</label>
                             <div className="relative group">
@@ -217,8 +336,7 @@ export const SalesOrderForm = ({ products, onClose, onSubmit, loading, initialDa
                                     type="date"
                                     value={formData.delivery_date}
                                     onChange={(e) => setFormData({ ...formData, delivery_date: e.target.value })}
-                                    readOnly={isFromOrder}
-                                    className={`google-input google-input-icon ${isFromOrder ? 'bg-gray-50 cursor-not-allowed opacity-70' : ''}`}
+                                    className="google-input google-input-icon"
                                 />
                             </div>
                         </div>

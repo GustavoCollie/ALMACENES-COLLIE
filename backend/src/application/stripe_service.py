@@ -20,6 +20,9 @@ class StripeService:
         self,
         items: list,
         customer_email: str,
+        customer_name: str = "",
+        shipping_type: str = "PICKUP",
+        shipping_address: str = "",
         apply_discount: bool = False,
     ) -> dict:
         """
@@ -27,10 +30,10 @@ class StripeService:
         Each item: {product_name, unit_price (Decimal), quantity (int), product_id (str)}
         """
         api_key = os.getenv("STRIPE_API_KEY", "")
-        
+
         # Detect if we should use mock mode
         is_mock = os.getenv("MOCK_STRIPE", "false").lower() == "true" or not api_key or api_key == "xxxx"
-        
+
         if is_mock:
             import json
             mock_session_id = f"mock_session_{uuid4()}"
@@ -40,25 +43,22 @@ class StripeService:
                 for i in items
             ])
             success_url = f"{ECOMMERCE_FRONTEND_URL}/order-confirmation?session_id={mock_session_id}"
-            
+
             # Store mock session metadata
             _MOCK_SESSIONS[mock_session_id] = {
                 "customer_email": customer_email,
+                "customer_name": customer_name,
                 "apply_discount": str(apply_discount),
                 "items_json": items_json,
-                "shipping_type": items[0].get("shipping_type", "PICKUP") if items else "PICKUP",
-                "shipping_address": items[0].get("shipping_address", "") if items else "",
+                "shipping_type": shipping_type,
+                "shipping_address": shipping_address,
                 "is_mock": "True"
             }
-            
+
             return {"session_id": mock_session_id, "checkout_url": success_url, "is_mock": True}
 
         stripe.api_key = api_key
         line_items = []
-        # Extract metadata from first item if passed through items list, or handle separately
-        # (Assuming items[0] contains common metadata for simplicity in this flow)
-        shipping_type = items[0].get("shipping_type", "PICKUP") if items else "PICKUP"
-        shipping_address = items[0].get("shipping_address", "") if items else ""
 
         for item in items:
             stripe_price_id = item.get("stripe_price_id")
@@ -109,6 +109,7 @@ class StripeService:
             cancel_url=f"{ECOMMERCE_FRONTEND_URL}/cart",
             metadata={
                 "customer_email": customer_email,
+                "customer_name": customer_name,
                 "apply_discount": str(apply_discount),
                 "shipping_type": shipping_type,
                 "shipping_address": shipping_address,

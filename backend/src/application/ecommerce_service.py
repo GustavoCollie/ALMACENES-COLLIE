@@ -56,6 +56,7 @@ class EcommerceService:
         customer_email: str,
         customer_name: str,
         shipping_address: Optional[str],
+        shipping_type: str = "PICKUP",
         apply_discount: bool = False,
     ) -> dict:
         """Validate stock and create Stripe checkout session."""
@@ -69,18 +70,18 @@ class EcommerceService:
             if product.retail_price is None:
                 raise ValueError(f"Producto {product.name} no tiene precio de venta")
             now = datetime.now(timezone(timedelta(hours=-5)))
-            
+
             # 1. Promotional pricing strictly by date
             is_preorder_marked = product.is_preorder
-            
+
             # Ensure estimated_delivery_date is aware before comparison
             est_date = product.estimated_delivery_date
             if est_date and est_date.tzinfo is None:
                 est_date = est_date.replace(tzinfo=timezone(timedelta(hours=-5)))
-                
+
             pricing_date_active = est_date is None or est_date > now
             promo_preorder_active = is_preorder_marked and pricing_date_active
-            
+
             unit_price = product.preorder_price if (promo_preorder_active and product.preorder_price) else product.retail_price
             checkout_items.append({
                 "product_id": str(product.id),
@@ -94,6 +95,9 @@ class EcommerceService:
         return self._stripe.create_checkout_session(
             items=checkout_items,
             customer_email=customer_email,
+            customer_name=customer_name,
+            shipping_type=shipping_type,
+            shipping_address=shipping_address or "",
             apply_discount=apply_discount,
         )
 
@@ -107,8 +111,9 @@ class EcommerceService:
         delivery_date = now + timedelta(hours=48)
         
         customer_email = metadata.get("customer_email", session_data["customer_email"])
+        customer_name = metadata.get("customer_name", customer_email.split("@")[0])
         apply_discount = metadata.get("apply_discount", "False") == "True"
-        shipping_type = metadata.get("shipping_type", "DELIVERY")
+        shipping_type = metadata.get("shipping_type", "PICKUP")
         shipping_address = metadata.get("shipping_address", "")
         items_json = metadata.get("items_json")
         
@@ -152,7 +157,7 @@ class EcommerceService:
 
             order = SalesOrder(
                 id=uuid4(),
-                customer_name=customer_email.split("@")[0],
+                customer_name=customer_name,
                 customer_email=customer_email,
                 product_id=product_id,
                 quantity=quantity,

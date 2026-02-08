@@ -211,6 +211,7 @@ def create_checkout_session(
             customer_email=body.customer_email,
             customer_name=body.customer_name,
             shipping_address=body.shipping_address,
+            shipping_type=body.shipping_type,
             apply_discount=body.apply_discount,
         )
         logger.info(f"Sesión creada exitosamente. URL: {result.get('checkout_url')}")

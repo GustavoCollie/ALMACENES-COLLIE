@@ -3,10 +3,36 @@ import { useCart } from '../context/CartContext';
 import { createCheckoutSession } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { useCustomerAuth } from '../context/CustomerAuthContext';
-import { CreditCard, Truck, Shield, AlertCircle, Package, Clock } from 'lucide-react';
+import { CreditCard, Truck, Shield, AlertCircle, Package, Clock, LogIn, UserPlus, ArrowLeft } from 'lucide-react';
 import { getImageUrl } from '../utils/imageUtils';
 import { isCurrentlyPreorder } from '../utils/productUtils';
 import { cn } from '../utils/cn';
+
+const LATIN_AMERICAN_COUNTRIES = [
+    'Peru', 'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica',
+    'Cuba', 'Ecuador', 'El Salvador', 'Guatemala', 'Honduras', 'Mexico',
+    'Nicaragua', 'Panama', 'Paraguay', 'Republica Dominicana', 'Uruguay', 'Venezuela'
+];
+
+const LIMA_DISTRICTS = [
+    'Miraflores', 'San Borja', 'San Isidro', 'Surco', 'La Molina', 'Barranco',
+    'Chorrillos', 'Jesus Maria', 'Lince', 'Magdalena', 'Pueblo Libre', 'San Miguel',
+    'Breña', 'Cercado de Lima', 'Rimac', 'San Juan de Lurigancho',
+    'San Juan de Miraflores', 'Villa Maria del Triunfo', 'Villa El Salvador',
+    'Los Olivos', 'Independencia', 'Comas', 'San Martin de Porres', 'Ate',
+    'Santa Anita', 'El Agustino', 'La Victoria', 'Surquillo', 'San Luis',
+    'Chaclacayo', 'Lurigancho-Chosica', 'Cieneguilla', 'Pachacamac', 'Carabayllo',
+    'Puente Piedra', 'Ancon', 'Santa Rosa', 'Punta Negra', 'Punta Hermosa',
+    'San Bartolo', 'Lurin', 'Pucusana'
+];
+
+const PERU_DEPARTMENTS = [
+    'Arequipa', 'Cusco', 'Trujillo (La Libertad)', 'Piura', 'Chiclayo (Lambayeque)',
+    'Huancayo (Junin)', 'Iquitos (Loreto)', 'Tacna', 'Cajamarca', 'Puno',
+    'Ayacucho', 'Huanuco', 'Ica'
+];
+
+const PERU_LOCATIONS = [...LIMA_DISTRICTS, ...PERU_DEPARTMENTS].sort();
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
@@ -20,7 +46,7 @@ const Checkout = () => {
         email: '',
         address: '',
         city: '',
-        country: '',
+        country: 'Peru',
         zip: '',
         shippingType: 'PICKUP'
     });
@@ -38,9 +64,14 @@ const Checkout = () => {
     }, [customer]);
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
+        const { name, value } = e.target;
+        setFormData(prev => {
+            const updated = { ...prev, [name]: value };
+            // Reset city when country changes
+            if (name === 'country' && value !== prev.country) {
+                updated.city = '';
+            }
+            return updated;
         });
     };
 
@@ -81,11 +112,8 @@ const Checkout = () => {
             };
 
             const result = await createCheckoutSession(checkoutPayload);
-            // ...
-            // (rest of the component)
             if (result.checkout_url) {
                 window.location.href = result.checkout_url;
-                // Note: We don't reset loading here to prevent re-clicks while redirecting
             } else {
                 console.warn("Sin checkout_url, asumiendo sesión mock exitosa.");
                 clearCart();
@@ -98,6 +126,47 @@ const Checkout = () => {
             setLoading(false);
         }
     };
+
+    // Auth gate modal
+    if (!customer) {
+        return (
+            <div className="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4">
+                <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40" />
+                <div className="relative z-50 bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-8 sm:p-10 border border-gray-100 text-center animate-in zoom-in-95 duration-300">
+                    <div className="w-16 h-16 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-primary-100">
+                        <LogIn className="w-8 h-8 text-primary-600" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-3 font-['Outfit']">Inicia sesion para continuar</h2>
+                    <p className="text-sm text-gray-500 mb-8 leading-relaxed">
+                        Registrarse es facil y rapido. No necesitas agregar tarjeta de credito a menos que realices un pago.
+                    </p>
+                    <div className="space-y-3">
+                        <button
+                            onClick={() => navigate('/login')}
+                            className="w-full flex items-center justify-center py-3.5 px-6 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-200"
+                        >
+                            <LogIn className="w-5 h-5 mr-2" />
+                            Iniciar Sesion
+                        </button>
+                        <button
+                            onClick={() => navigate('/register')}
+                            className="w-full flex items-center justify-center py-3.5 px-6 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition-all"
+                        >
+                            <UserPlus className="w-5 h-5 mr-2" />
+                            Crear Cuenta
+                        </button>
+                    </div>
+                    <button
+                        onClick={() => navigate('/')}
+                        className="mt-6 inline-flex items-center text-sm text-gray-400 hover:text-gray-600 transition font-medium"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-1" />
+                        Volver a la tienda
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (cart.length === 0) {
         return (
@@ -112,6 +181,8 @@ const Checkout = () => {
             </div>
         );
     }
+
+    const isPeru = formData.country === 'Peru';
 
     return (
         <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -235,25 +306,51 @@ const Checkout = () => {
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                                         <div className="col-span-1">
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Distrito / Ciudad</label>
-                                            <input
-                                                type="text"
-                                                name="city"
-                                                required={formData.shippingType === 'DELIVERY'}
-                                                value={formData.city}
-                                                onChange={handleChange}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
-                                            />
+                                            {isPeru ? (
+                                                <select
+                                                    name="city"
+                                                    required={formData.shippingType === 'DELIVERY'}
+                                                    value={formData.city}
+                                                    onChange={handleChange}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition bg-white"
+                                                >
+                                                    <option value="">Seleccionar...</option>
+                                                    <optgroup label="Distritos de Lima">
+                                                        {LIMA_DISTRICTS.map(d => (
+                                                            <option key={d} value={d}>{d}</option>
+                                                        ))}
+                                                    </optgroup>
+                                                    <optgroup label="Departamentos">
+                                                        {PERU_DEPARTMENTS.map(d => (
+                                                            <option key={d} value={d}>{d}</option>
+                                                        ))}
+                                                    </optgroup>
+                                                </select>
+                                            ) : (
+                                                <input
+                                                    type="text"
+                                                    name="city"
+                                                    required={formData.shippingType === 'DELIVERY'}
+                                                    value={formData.city}
+                                                    onChange={handleChange}
+                                                    placeholder="Ciudad o distrito"
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
+                                                />
+                                            )}
                                         </div>
                                         <div className="col-span-1">
                                             <label className="block text-sm font-medium text-gray-700 mb-1">País</label>
-                                            <input
-                                                type="text"
+                                            <select
                                                 name="country"
                                                 required={formData.shippingType === 'DELIVERY'}
                                                 value={formData.country}
                                                 onChange={handleChange}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
-                                            />
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition bg-white"
+                                            >
+                                                {LATIN_AMERICAN_COUNTRIES.map(c => (
+                                                    <option key={c} value={c}>{c}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="col-span-2 sm:col-span-1">
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Código Postal</label>

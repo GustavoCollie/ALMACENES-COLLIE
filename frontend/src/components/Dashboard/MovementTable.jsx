@@ -30,7 +30,7 @@ export const MovementTable = ({ movements, loading }) => {
 
         doc.setFontSize(10);
         doc.setTextColor(95, 99, 104);
-        doc.text(`GUSMI Inventarios Intelligent System • ${dateStr}`, 105, 32, { align: 'center' });
+        doc.text(`IcaImporta.pe - Almacenes • ${dateStr}`, 105, 32, { align: 'center' });
         doc.line(20, 40, 190, 40);
 
         autoTable(doc, {

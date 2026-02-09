@@ -6,7 +6,7 @@ describe('Navigation & UI', () => {
   });
 
   it('should display header with branding and search', () => {
-    cy.contains('GUSMI').should('be.visible');
+    cy.contains('IcaImporta.pe').should('be.visible');
     cy.contains('Inventario').should('be.visible');
     cy.get('input[placeholder="Buscar en inventario..."]').should('be.visible');
     cy.contains('Jefe de Almacén').should('be.visible');

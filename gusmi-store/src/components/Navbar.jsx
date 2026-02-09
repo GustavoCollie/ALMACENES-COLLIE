@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useCustomerAuth } from '../context/CustomerAuthContext';
-import { ShoppingBag, Search, LogOut, Package, Globe, Menu, X } from 'lucide-react';
+import { ShoppingBag, Search, LogOut, Package, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
     const { toggleCart, cartCount } = useCart();
@@ -35,15 +35,15 @@ const Navbar = () => {
                     <Link to="/" className="flex items-center gap-3 group shrink-0">
                         <div className="relative">
                             <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-primary-400 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                            <div className="relative w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center transform group-hover:scale-105 group-hover:-rotate-3 transition-all duration-300">
-                                <Globe className="w-6 h-6 text-primary-600" />
+                            <div className="relative w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center transform group-hover:scale-105 group-hover:-rotate-3 transition-all duration-300 overflow-hidden">
+                                <img src="/logo.png" alt="IcaImporta.pe" className="w-full h-full object-contain p-0.5" />
                             </div>
                         </div>
                         <div className="flex flex-col -space-y-1.5">
                             <span className="text-xl font-black text-slate-900 tracking-tighter">
-                                GUSMI<span className="text-primary-600">STORE</span>
+                                Ica<span className="text-primary-600">Importa</span><span className="text-accent-500">.pe</span>
                             </span>
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400">Digital Store</span>
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400">Importaciones & Ventas</span>
                         </div>
                     </Link>
 
@@ -100,7 +100,7 @@ const Navbar = () => {
                             )}
                         </div>
 
-                        {/* Cart button — always visible */}
+                        {/* Cart button */}
                         <button
                             onClick={toggleCart}
                             className="relative p-2 text-gray-700 hover:text-primary-600 transition bg-gray-50 rounded-full"

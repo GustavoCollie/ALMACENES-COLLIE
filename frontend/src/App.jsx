@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Package, Plus, Search, LogOut, Github, TrendingUp, AlertCircle, History, LayoutDashboard, ShoppingBag, ShoppingCart, BarChart2, Users } from 'lucide-react';
+import { Package, Plus, Search, LogOut, Github, TrendingUp, AlertCircle, History, ShoppingBag, ShoppingCart, BarChart2, Users } from 'lucide-react';
 import { useProducts } from './hooks/useProducts';
 import { DashboardStats } from './components/Dashboard/DashboardStats';
 import { ProductTable } from './components/Dashboard/ProductTable';
@@ -197,10 +197,10 @@ function App() {
       {/* Google-style Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-[#dadce0] px-6 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="p-2 text-[#1a73e8] hover:bg-[#f1f3f4] rounded-full transition-colors cursor-pointer">
-            <LayoutDashboard size={24} />
+          <div className="p-1 hover:bg-[#f1f3f4] rounded-full transition-colors cursor-pointer overflow-hidden w-10 h-10 flex items-center justify-center">
+            <img src="/logo.png" alt="IcaImporta.pe" className="w-8 h-8 object-contain" />
           </div>
-          <span className="text-[22px] font-medium text-[#202124] tracking-tight ml-1">GUSMI <span className="text-[#5f6368] font-normal">Inventario</span></span>
+          <span className="text-[22px] font-medium text-[#202124] tracking-tight ml-1">IcaImporta.pe <span className="text-[#5f6368] font-normal">Almacenes</span></span>
         </div>
 
         <div className="flex-1 max-w-2xl mx-12">
@@ -443,7 +443,7 @@ function App() {
       </main>
 
       <footer className="mt-12 py-8 border-t border-[#dadce0] text-center">
-        <p className="text-[#5f6368] text-xs font-medium">Almacenes GUSMI • © 2026 • Design by Google Style</p>
+        <p className="text-[#5f6368] text-xs font-medium">Almacenes IcaImporta.pe • © 2026</p>
       </footer>
 
       {showForm && (

@@ -4,7 +4,7 @@ import { fetchCustomerOrders } from '../services/api';
 import {
     Package, Truck, CheckCircle, Clock, MapPin,
     ChevronRight, ShoppingBag, X, Printer, Download,
-    CreditCard, User as UserIcon, Mail, Calendar, Hash, Globe
+    CreditCard, User as UserIcon, Mail, Calendar, Hash
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getImageUrl } from '../utils/imageUtils';
@@ -31,11 +31,11 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                 {/* Header */}
                 <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center border border-primary-100 shadow-sm">
-                            <Globe className="w-6 h-6 text-primary-600" />
+                        <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center border border-primary-100 shadow-sm overflow-hidden">
+                            <img src="/logo.png" alt="IcaImporta.pe" className="w-full h-full object-contain p-0.5" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-gray-900 tracking-tight">GUSMI<span className="text-primary-600">STORE</span></h2>
+                            <h2 className="text-xl font-bold text-gray-900 tracking-tight">Ica<span className="text-primary-600">Importa</span><span className="text-accent-500">.pe</span></h2>
                             <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">ID del Pedido: {order.id}</p>
                         </div>
                     </div>
@@ -89,10 +89,10 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                 <div>
                                     <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Destino</p>
                                     <p className="text-sm font-bold text-gray-900 leading-snug">
-                                        {order.shipping_type === 'PICKUP' ? 'Almacén Central GUSMI' : order.shipping_address}
+                                        {order.shipping_type === 'PICKUP' ? 'Almacén Central IcaImporta.pe' : order.shipping_address}
                                     </p>
                                     {order.shipping_type === 'PICKUP' && (
-                                        <p className="text-[10px] text-gray-500 mt-1">Calle Los Pinos 123, San Borja, Lima</p>
+                                        <p className="text-[10px] text-gray-500 mt-1">Ica, Perú</p>
                                     )}
                                 </div>
                                 <div>
@@ -183,13 +183,13 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                             {/* Ticket Content */}
                             <div className="text-center space-y-4 font-mono select-all">
                                 <div className="flex flex-col items-center gap-1">
-                                    <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center mb-1">
-                                        <Globe className="w-6 h-6 text-white" />
+                                    <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center mb-1 overflow-hidden">
+                                        <img src="/logo.png" alt="IcaImporta.pe" className="w-full h-full object-contain p-0.5" />
                                     </div>
-                                    <h4 className="text-2xl font-black tracking-tighter italic">GUSMI STORE</h4>
-                                    <p className="text-[10px] text-gray-500 uppercase tracking-widest">Gusmi Intelligent Systems S.A.C.</p>
+                                    <h4 className="text-2xl font-black tracking-tighter italic">ICAIMPORTA.PE</h4>
+                                    <p className="text-[10px] text-gray-500 uppercase tracking-widest">IcaImporta.pe S.A.C.</p>
                                     <p className="text-[10px] text-gray-500">RUC: 20123456789</p>
-                                    <p className="text-[10px] text-gray-500">Calle Las Casuarinas 123, Lima</p>
+                                    <p className="text-[10px] text-gray-500">Ica, Perú</p>
                                 </div>
 
                                 <div className="border-y border-dashed border-gray-300 py-3 space-y-1">
@@ -217,7 +217,7 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                             <tr>
                                                 <td className="py-2 pr-2 leading-tight">{order.product_name}</td>
                                                 <td className="py-2 text-center">{order.quantity}</td>
-                                                <td className="py-2 text-right">${order.total_amount.toFixed(2)}</td>
+                                                <td className="py-2 text-right">${(order.quantity * order.unit_price).toFixed(2)}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -249,7 +249,7 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                 </div>
 
                                 <div className="pt-6 space-y-2">
-                                    <p className="text-[9px] text-gray-400 italic">Gracias por confiar en Gusmi Intelligent Systems. Esta es una representación digital de tu compra.</p>
+                                    <p className="text-[9px] text-gray-400 italic">Gracias por confiar en IcaImporta.pe. Esta es una representación digital de tu compra.</p>
                                     <div className="w-16 h-16 bg-gray-50 rounded-lg mx-auto flex items-center justify-center border border-gray-100">
                                         <Hash className="w-8 h-8 text-gray-200" />
                                     </div>

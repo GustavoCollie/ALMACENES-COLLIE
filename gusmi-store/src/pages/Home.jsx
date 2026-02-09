@@ -275,7 +275,7 @@ const Home = () => {
 
                         {/* Decorative Banner between sections */}
                         {regularProducts.length > 0 && preorderProducts.length > 0 && (
-                            <div className="bg-gradient-to-br from-primary-700 via-primary-600 to-accent-500 rounded-3xl p-8 md:p-12 text-white shadow-xl shadow-primary-200/50 relative overflow-hidden">
+                            <div className="bg-primary-700 rounded-3xl p-8 md:p-12 text-white shadow-xl shadow-primary-200/50 relative overflow-hidden">
                                 <div className="absolute inset-0 opacity-10">
                                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full -translate-y-1/2 translate-x-1/2" />
                                     <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -323,14 +323,14 @@ const Home = () => {
                         {/* Preorder Products */}
                         {preorderProducts.length > 0 && (
                             <div id="productos-preventa">
-                                <div className="bg-gradient-to-r from-primary-700 to-primary-600 rounded-2xl p-6 mb-6 text-white shadow-lg shadow-primary-200">
+                                <div className="bg-accent-600 rounded-2xl p-6 mb-6 text-white shadow-lg shadow-accent-200">
                                     <div className="flex items-center gap-3">
                                         <div className="bg-white/20 p-2.5 rounded-xl">
                                             <Clock className="w-6 h-6" />
                                         </div>
                                         <div>
                                             <h3 className="text-xl font-bold font-['Outfit']">Pre-Venta</h3>
-                                            <p className="text-primary-200 text-sm">Reserva ahora a precio especial — entrega cuando llegue el producto</p>
+                                            <p className="text-orange-100 text-sm">Reserva ahora a precio especial — entrega cuando llegue el producto</p>
                                         </div>
                                         <span className="ml-auto text-xs bg-white/20 px-3 py-1 rounded-full font-bold">{preorderProducts.length} {preorderProducts.length === 1 ? 'producto' : 'productos'}</span>
                                     </div>

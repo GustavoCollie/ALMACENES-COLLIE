@@ -44,9 +44,9 @@ export const Footer = () => {
                         <h4 className="text-white font-bold mb-6 font-['Outfit'] uppercase tracking-wider text-xs">Explorar</h4>
                         <ul className="space-y-4 text-sm">
                             <li><Link to="/" className="hover:text-primary-400 transition">Inicio</Link></li>
-                            <li><a href="#" className="hover:text-primary-400 transition">Nuevos Productos</a></li>
-                            <li><a href="#" className="hover:text-primary-400 transition">Ofertas Especiales</a></li>
-                            <li><a href="#" className="hover:text-primary-400 transition">Categorías</a></li>
+                            <li><a href="/#productos-stock" className="hover:text-primary-400 transition">Productos en Stock</a></li>
+                            <li><a href="/#productos-preventa" className="hover:text-primary-400 transition">Pre-Ventas</a></li>
+                            <li><Link to="/faq" className="hover:text-primary-400 transition">Preguntas Frecuentes</Link></li>
                         </ul>
                     </div>
 
@@ -54,10 +54,10 @@ export const Footer = () => {
                     <div>
                         <h4 className="text-white font-bold mb-6 font-['Outfit'] uppercase tracking-wider text-xs">Soporte</h4>
                         <ul className="space-y-4 text-sm">
-                            <li><a href="#" className="hover:text-primary-400 transition">Preguntas Frecuentes</a></li>
-                            <li><a href="#" className="hover:text-primary-400 transition">Políticas de Envío</a></li>
-                            <li><a href="#" className="hover:text-primary-400 transition">Términos y Condiciones</a></li>
-                            <li><a href="#" className="hover:text-primary-400 transition">Privacidad</a></li>
+                            <li><Link to="/envios" className="hover:text-primary-400 transition">Políticas de Envío</Link></li>
+                            <li><Link to="/terminos" className="hover:text-primary-400 transition">Términos y Condiciones</Link></li>
+                            <li><Link to="/privacidad" className="hover:text-primary-400 transition">Privacidad</Link></li>
+                            <li><a href="https://wa.me/51995876300" target="_blank" rel="noopener noreferrer" className="hover:text-primary-400 transition">WhatsApp Soporte</a></li>
                         </ul>
                     </div>
 
@@ -71,7 +71,7 @@ export const Footer = () => {
                             </li>
                             <li className="flex items-center space-x-3 text-slate-400">
                                 <Phone size={18} className="text-primary-400" />
-                                <span>+51 987 654 321</span>
+                                <span>+51 995 876 300</span>
                             </li>
                             <li className="flex items-center space-x-3 text-slate-400">
                                 <Mail size={18} className="text-primary-400" />

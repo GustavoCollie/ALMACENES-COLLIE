@@ -148,13 +148,56 @@ raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localho
 origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
 logger.info(f"CORS configured for origins: {origins}")
 
+# Use a permissive CORSMiddleware for known origins list, but also
+# handle dynamic vercel preview origins (e.g. https://proj-branch-user.vercel.app)
+# by adding a small middleware below that sets CORS headers when the Origin
+# matches the configured list or the vercel preview pattern.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[],  # we'll handle origins dynamically
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Dynamic CORS middleware to accept configured origins and vercel previews
+import re
+vercel_preview_regex = re.compile(r"https://.*\.vercel\.app")
+
+
+@app.middleware("http")
+async def dynamic_cors_middleware(request, call_next):
+    origin = request.headers.get("origin")
+    allowed = False
+    if origin:
+        # exact match against configured origins
+        if origin in origins:
+            allowed = True
+        # allow Vercel preview subdomains
+        elif vercel_preview_regex.match(origin):
+            allowed = True
+
+    # Handle preflight directly
+    if request.method == "OPTIONS":
+        from fastapi.responses import Response
+        headers = {}
+        if allowed:
+            headers.update({
+                "Access-Control-Allow-Origin": origin,
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+                "Access-Control-Allow-Headers": request.headers.get("access-control-request-headers", "*"),
+            })
+        return Response(status_code=204, headers=headers)
+
+    response = await call_next(request)
+    if allowed and origin:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        # keep other CORS headers permissive
+        response.headers.setdefault("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
+        response.headers.setdefault("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept,Origin")
+    return response
 
 app.include_router(products_router, prefix="/api/v1/products")
 app.include_router(auth_router, prefix="/api/v1/auth")

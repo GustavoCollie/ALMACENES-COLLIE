@@ -238,8 +238,34 @@ const Home = () => {
     };
 
     useEffect(() => {
-        // Always start from top when search, page or tab changes
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Scroll to the appropriate section when page, search or tab changes
+        const doScroll = () => {
+            try {
+                if (activeTab === 'preorder') {
+                    const el = document.getElementById('productos-preventa');
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        return;
+                    }
+                }
+
+                if (activeTab === 'available') {
+                    const el = document.getElementById('productos-stock');
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        return;
+                    }
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (e) {
+                // ignore
+            }
+        };
+
+        // small timeout to ensure DOM updated after navigation/state change
+        const t = setTimeout(doScroll, 80);
+        return () => clearTimeout(t);
     }, [currentPage, searchQuery, activeTab]);
 
     return (

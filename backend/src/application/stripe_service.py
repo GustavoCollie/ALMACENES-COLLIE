@@ -9,7 +9,7 @@ from uuid import uuid4
 import stripe
 
 
-ECOMMERCE_FRONTEND_URL = os.getenv("ECOMMERCE_FRONTEND_URL", "http://localhost:5174")
+ECOMMERCE_FRONTEND_URL = os.getenv("ECOMMERCE_FRONTEND_URL", "http://localhost:5173")
 _MOCK_SESSIONS = {}  # Store mock metadata in memory for dev simulation
 
 

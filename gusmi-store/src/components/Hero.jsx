@@ -89,7 +89,7 @@ export const Hero = () => {
             <div className="relative min-h-[480px] md:min-h-[500px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center py-16">
                 <div
                     key={banner.id}
-                    className="max-w-2xl animate-fade-in-up"
+                    className="max-w-2xl animate-fade-in-up px-2 sm:px-0"
                 >
                     {/* Badge */}
                     <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-5 border ${banner.badgeColor}`}>
@@ -98,12 +98,12 @@ export const Hero = () => {
                     </span>
 
                     {/* Title */}
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-[1.1] tracking-tight">
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 md:mb-5 leading-[1.1] tracking-tight">
                         {banner.title}
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="text-lg md:text-xl text-white/80 mb-8 max-w-xl leading-relaxed">
+                    <p className="text-base md:text-xl text-white/80 mb-6 md:mb-8 max-w-xl leading-relaxed">
                         {banner.subtitle}
                     </p>
 
@@ -177,11 +177,10 @@ export const Hero = () => {
                     <button
                         key={i}
                         onClick={() => goTo(i)}
-                        className={`rounded-full transition-all duration-300 ${
-                            i === current
+                        className={`rounded-full transition-all duration-300 ${i === current
                                 ? 'w-8 h-3 bg-white'
                                 : 'w-3 h-3 bg-white/40 hover:bg-white/60'
-                        }`}
+                            }`}
                     />
                 ))}
             </div>

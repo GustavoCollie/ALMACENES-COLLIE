@@ -219,12 +219,12 @@ const Checkout = () => {
     return (
         <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
-                <h1 id="checkout-title" tabIndex={-1} className="text-3xl font-bold text-gray-900 mb-8 text-center sm:text-left font-['Outfit']">Finalizar Compra</h1>
+                <h1 id="checkout-title" tabIndex={-1} className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 text-center sm:text-left font-['Outfit']">Finalizar Compra</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     {/* Left Column: Form */}
-                    <div className="lg:col-span-7 bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 p-6 sm:p-10 border border-gray-100">
-                        <h2 className="text-xl font-semibold mb-6 flex items-center">
+                    <div className="order-2 lg:order-1 lg:col-span-7 bg-white rounded-2xl md:rounded-[2rem] shadow-xl shadow-gray-200/50 p-5 sm:p-10 border border-gray-100">
+                        <h2 className="text-lg md:text-xl font-semibold mb-6 flex items-center">
                             <Truck className="w-5 h-5 mr-2 text-primary-600" />
                             Información de Envío
                         </h2>
@@ -238,38 +238,38 @@ const Checkout = () => {
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-4 mb-6">
-                                <label className="block text-sm font-bold text-gray-700">Método de Entrega</label>
-                                <div className="grid grid-cols-2 gap-4">
+                                <label className="block text-sm font-bold text-gray-700 mb-3">Método de Entrega</label>
+                                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                                     <button
                                         type="button"
                                         onClick={() => setFormData(prev => ({ ...prev, shippingType: 'PICKUP' }))}
                                         className={cn(
-                                            "p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 relative overflow-hidden group",
+                                            "p-4 sm:p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 sm:gap-3 relative overflow-hidden group",
                                             formData.shippingType === 'PICKUP'
                                                 ? "border-[#1a73e8] bg-[#e8f0fe] text-[#1a73e8]"
                                                 : "border-gray-100 bg-white text-gray-400 hover:border-gray-200"
                                         )}
                                     >
-                                        <Package className={cn("w-8 h-8 transition-transform group-hover:scale-110", formData.shippingType === 'PICKUP' ? "text-[#1a73e8]" : "text-gray-300")} />
+                                        <Package className={cn("w-6 h-6 sm:w-8 sm:h-8 transition-transform group-hover:scale-110", formData.shippingType === 'PICKUP' ? "text-[#1a73e8]" : "text-gray-300")} />
                                         <div className="text-center">
-                                            <span className="block text-[13px] font-black uppercase tracking-wider">Recojo</span>
-                                            <span className="text-[10px] font-bold opacity-70">En Tienda • Gratis</span>
+                                            <span className="block text-[11px] sm:text-[13px] font-black uppercase tracking-wider">Recojo</span>
+                                            <span className="text-[9px] sm:text-[10px] font-bold opacity-70">En Tienda • Gratis</span>
                                         </div>
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setFormData(prev => ({ ...prev, shippingType: 'DELIVERY' }))}
                                         className={cn(
-                                            "p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-3 relative overflow-hidden group",
+                                            "p-4 sm:p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 sm:gap-3 relative overflow-hidden group",
                                             formData.shippingType === 'DELIVERY'
                                                 ? "border-amber-500 bg-amber-50 text-amber-700"
                                                 : "border-gray-100 bg-white text-gray-400 hover:border-gray-200"
                                         )}
                                     >
-                                        <Truck className={cn("w-8 h-8 transition-transform group-hover:scale-110", formData.shippingType === 'DELIVERY' ? "text-amber-500" : "text-gray-300")} />
+                                        <Truck className={cn("w-6 h-6 sm:w-8 sm:h-8 transition-transform group-hover:scale-110", formData.shippingType === 'DELIVERY' ? "text-amber-500" : "text-gray-300")} />
                                         <div className="text-center">
-                                            <span className="block text-[13px] font-black uppercase tracking-wider">Delivery</span>
-                                            <span className="text-[10px] font-bold opacity-70">Pago en recepción</span>
+                                            <span className="block text-[11px] sm:text-[13px] font-black uppercase tracking-wider">Delivery</span>
+                                            <span className="text-[9px] sm:text-[10px] font-bold opacity-70">Pago en recepción</span>
                                         </div>
                                     </button>
                                 </div>
@@ -283,7 +283,7 @@ const Checkout = () => {
                                 )}
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
                                     <input
@@ -335,7 +335,7 @@ const Checkout = () => {
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                                         <div className="col-span-1">
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Distrito / Ciudad</label>
                                             {isPeru ? (
@@ -430,8 +430,8 @@ const Checkout = () => {
                     </div>
 
                     {/* Right Column: Summary */}
-                    <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-8">
-                        <div className="bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 p-6 sm:p-10 border border-violet-100 ring-1 ring-violet-50">
+                    <div className="order-1 lg:order-2 lg:col-span-5 space-y-6 lg:sticky lg:top-8">
+                        <div className="bg-white rounded-2xl md:rounded-[2rem] shadow-xl shadow-gray-200/50 p-5 sm:p-10 border border-violet-100 ring-1 ring-violet-50">
                             <h2 className="text-xl font-semibold mb-6">Resumen del Pedido</h2>
                             <ul className="divide-y divide-gray-100 max-h-[400px] overflow-y-auto mb-6">
                                 {cart.map((item) => {

@@ -52,11 +52,11 @@ const Navbar = () => {
                                 <img src="/logo.png" alt="IcaImporta.pe" className="w-full h-full object-contain p-0.5" />
                             </div>
                         </div>
-                        <div className="flex flex-col -space-y-1.5">
-                            <span className="text-xl font-black text-slate-900 tracking-tighter">
+                        <div className="flex flex-col -space-y-1 md:-space-y-1.5 min-w-0">
+                            <span className="text-lg md:text-xl font-black text-slate-900 tracking-tighter truncate">
                                 Ica<span className="text-primary-600">Importa</span><span className="text-accent-500">.pe</span>
                             </span>
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400">Importaciones & Ventas</span>
+                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-gray-400 truncate">Importaciones & Ventas</span>
                         </div>
                     </Link>
 
@@ -129,9 +129,9 @@ const Navbar = () => {
                         {/* Mobile hamburger */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            className="lg:hidden p-2 text-gray-700 hover:text-primary-600 transition rounded-full"
+                            className="lg:hidden p-1.5 sm:p-2 text-gray-700 hover:text-primary-600 transition rounded-full"
                         >
-                            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                            {mobileOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
                         </button>
                     </div>
                 </div>
@@ -141,14 +141,14 @@ const Navbar = () => {
             {mobileOpen && (
                 <div className="lg:hidden border-t border-gray-100 bg-white px-4 pb-4 pt-3 space-y-3">
                     {/* Mobile search */}
-                        <div className="relative md:hidden">
+                    <div className="relative md:hidden">
                         <input
                             type="text"
                             placeholder="Buscar productos..."
-                                value={searchValue}
-                                onChange={(e) => {
-                                    handleSearchChange(e);
-                                }}
+                            value={searchValue}
+                            onChange={(e) => {
+                                handleSearchChange(e);
+                            }}
                             className="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-100 focus:border-primary-500 focus:ring-4 focus:ring-primary-50 transition-all outline-none bg-gray-50 text-sm"
                         />
                         <Search className="w-5 h-5 text-gray-400 absolute left-3 top-3" />

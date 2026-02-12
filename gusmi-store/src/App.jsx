@@ -17,9 +17,12 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 
+import ScrollToTop from './components/ScrollToTop';
+
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <CustomerAuthProvider>
         <CartProvider>
           <div className="min-h-screen bg-[#fcfcfc] flex flex-col">

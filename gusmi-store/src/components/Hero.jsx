@@ -125,10 +125,17 @@ export const Hero = () => {
                     {banner.socialProof && (
                         <div className="flex items-center space-x-3 text-white/60 text-sm font-medium">
                             <div className="flex -space-x-2">
-                                {[1, 2, 3].map((i) => (
-                                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white/20 bg-white/10 flex items-center justify-center text-white text-xs font-bold">
-                                        {String.fromCharCode(64 + i)}
-                                    </div>
+                                {[
+                                    "https://randomuser.me/api/portraits/men/32.jpg",
+                                    "https://randomuser.me/api/portraits/women/44.jpg",
+                                    "https://randomuser.me/api/portraits/men/86.jpg"
+                                ].map((src, i) => (
+                                    <img
+                                        key={i}
+                                        src={src}
+                                        alt={`User ${i + 1}`}
+                                        className="w-8 h-8 rounded-full border-2 border-white/20 object-cover"
+                                    />
                                 ))}
                             </div>
                             <span>{banner.socialProof}</span>
@@ -178,8 +185,8 @@ export const Hero = () => {
                         key={i}
                         onClick={() => goTo(i)}
                         className={`rounded-full transition-all duration-300 ${i === current
-                                ? 'w-8 h-3 bg-white'
-                                : 'w-3 h-3 bg-white/40 hover:bg-white/60'
+                            ? 'w-8 h-3 bg-white'
+                            : 'w-3 h-3 bg-white/40 hover:bg-white/60'
                             }`}
                     />
                 ))}

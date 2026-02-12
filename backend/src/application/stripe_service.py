@@ -71,7 +71,9 @@ class StripeService:
         for item in items:
             stripe_price_id = item.get("stripe_price_id")
 
-            if stripe_price_id:
+            # Fail-safe: Only use as Stripe Price if it actually starts with 'price_'
+            # If it starts with 'prod_' or is anything else, fallback to inline price creation
+            if stripe_price_id and str(stripe_price_id).startswith("price_"):
                 # Use pre-created Price ID from Stripe Dashboard
                 line_items.append({
                     "price": stripe_price_id,

@@ -187,10 +187,10 @@ const Home = () => {
                                     <span className="text-[10px] text-accent-600 font-extrabold uppercase tracking-[1.5px] mb-1">Precio Especial</span>
                                     <div className="flex items-baseline gap-2">
                                         <span className="font-black text-accent-600 text-2xl leading-none font-['Outfit']">
-                                            ${product.preorder_price}
+                                            S/. {product.preorder_price}
                                         </span>
                                         <span className="text-gray-400 text-sm line-through decoration-red-500/50 font-bold">
-                                            ${product.retail_price}
+                                            S/. {product.retail_price}
                                         </span>
                                     </div>
                                 </>
@@ -198,7 +198,7 @@ const Home = () => {
                                 <>
                                     <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Precio Online</span>
                                     <span className="font-black text-gray-900 text-2xl leading-none font-['Outfit']">
-                                        ${product.retail_price}
+                                        S/. {product.retail_price}
                                     </span>
                                 </>
                             )}

@@ -64,7 +64,7 @@ const OrderConfirmation = () => {
                             <div className="bg-gray-50 p-4 rounded-lg w-full mb-6 text-left space-y-3">
                                 <div>
                                     <p className="text-sm text-gray-500 mb-1">Total Amount</p>
-                                    <p className="text-2xl font-bold text-gray-900">${Number(orderData.total_amount || 0).toFixed(2)}</p>
+                                    <p className="text-2xl font-bold text-gray-900">S/. {Number(orderData.total_amount || 0).toFixed(2)}</p>
                                 </div>
                                 {orderData.delivery_date && (
                                     <div>

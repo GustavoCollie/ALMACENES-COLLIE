@@ -67,7 +67,7 @@ const CartSidebar = () => {
                                                             <span className="ml-2 text-[10px] bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-full font-bold uppercase">Pre-Venta</span>
                                                         )}
                                                     </h3>
-                                                    <p className="ml-4">${((item.effective_price || item.retail_price) * item.quantity).toFixed(2)}</p>
+                                                    <p className="ml-4">S/. {((item.effective_price || item.retail_price) * item.quantity).toFixed(2)}</p>
                                                 </div>
                                                 <p className="mt-1 text-sm text-gray-500">{item.description?.substring(0, 50)}...</p>
                                             </div>
@@ -108,7 +108,7 @@ const CartSidebar = () => {
                         <div className="border-t border-gray-200 py-6 px-4 sm:px-6 bg-gray-50">
                             <div className="flex justify-between text-base font-medium text-gray-900 mb-4">
                                 <p>Subtotal</p>
-                                <p>${cartTotal.toFixed(2)}</p>
+                                <p>S/. {cartTotal.toFixed(2)}</p>
                             </div>
                             <p className="mt-0.5 text-sm text-gray-500 mb-6">
                                 Shipping and taxes calculated at checkout.

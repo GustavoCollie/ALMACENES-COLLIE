@@ -418,7 +418,7 @@ const Checkout = () => {
                                     ) : (
                                         <span className="flex items-center">
                                             <CreditCard className="w-5 h-5 mr-2" />
-                                            Pagar ${cartTotal.toFixed(2)}
+                                            Pagar S/. {cartTotal.toFixed(2)}
                                         </span>
                                     )}
                                 </button>
@@ -466,7 +466,7 @@ const Checkout = () => {
                                                 )}
                                             </div>
                                             <div className={`ml-4 font-medium ${activePreorder ? 'text-violet-700' : 'text-gray-900'}`}>
-                                                ${(price * item.quantity).toFixed(2)}
+                                                S/. {(price * item.quantity).toFixed(2)}
                                             </div>
                                         </li>
                                     );
@@ -476,7 +476,7 @@ const Checkout = () => {
                             <div className="border-t border-gray-100 pt-4 space-y-2">
                                 <div className="flex justify-between text-sm text-gray-600">
                                     <span>Subtotal</span>
-                                    <span>${cartTotal.toFixed(2)}</span>
+                                    <span>S/. {cartTotal.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-600">
                                     <span>Envío</span>
@@ -486,7 +486,7 @@ const Checkout = () => {
                                 </div>
                                 <div className="flex justify-between text-base font-bold text-gray-900 pt-2 border-t border-gray-100 mt-2">
                                     <span>Total</span>
-                                    <span>${cartTotal.toFixed(2)}</span>
+                                    <span>S/. {cartTotal.toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>

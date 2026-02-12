@@ -124,8 +124,8 @@ const ProductDetails = () => {
                                     {activePreorder && product.preorder_price ? (
                                         <div className="flex flex-col">
                                             <div className="flex items-baseline gap-3">
-                                                <span className="text-5xl font-black text-accent-600 font-['Outfit']">${product.preorder_price}</span>
-                                                <span className="text-2xl text-gray-300 line-through decoration-red-500/30 font-bold">${product.retail_price}</span>
+                                                <span className="text-5xl font-black text-accent-600 font-['Outfit']">S/. {product.preorder_price}</span>
+                                                <span className="text-2xl text-gray-300 line-through decoration-red-500/30 font-bold">S/. {product.retail_price}</span>
                                             </div>
                                             <div className="mt-1 flex items-center gap-2">
                                                 <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider">Ahorras {Math.round(((product.retail_price - product.preorder_price) / product.retail_price) * 100)}%</span>
@@ -133,7 +133,7 @@ const ProductDetails = () => {
                                         </div>
                                     ) : (
                                         <div className="flex flex-col">
-                                            <span className="text-5xl font-black text-gray-900 font-['Outfit']">${product.retail_price}</span>
+                                            <span className="text-5xl font-black text-gray-900 font-['Outfit']">S/. {product.retail_price}</span>
                                         </div>
                                     )}
                                 </div>

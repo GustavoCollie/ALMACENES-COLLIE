@@ -103,7 +103,7 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                     {order.shipping_type === 'DELIVERY' && (
                                         <p className="text-[10px] text-amber-600 font-black mt-1">
                                             {order.shipping_cost > 0
-                                                ? `Costo de envío: $${order.shipping_cost.toFixed(2)}`
+                                                ? `Costo de envío: S/. ${order.shipping_cost.toFixed(2)}`
                                                 : 'Costo de delivery pendiente de asignacion'}
                                         </p>
                                     )}
@@ -130,20 +130,20 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                     </div>
                                     <div>
                                         <p className="font-bold text-gray-900">{order.product_name}</p>
-                                        <p className="text-sm text-gray-500">Cantidad: {order.quantity} x ${order.unit_price.toFixed(2)}</p>
+                                        <p className="text-sm text-gray-500">Cantidad: {order.quantity} x S/. {order.unit_price.toFixed(2)}</p>
                                     </div>
                                 </div>
-                                <p className="font-bold text-gray-900">${(order.quantity * order.unit_price).toFixed(2)}</p>
+                                <p className="font-bold text-gray-900">S/. {(order.quantity * order.unit_price).toFixed(2)}</p>
                             </div>
                         </div>
                         <div className="p-6 bg-gray-50/30 space-y-3">
                             <div className="flex justify-between text-sm">
                                 <span className="text-gray-500">Subtotal</span>
-                                <span className="text-gray-900 font-medium">${order.subtotal?.toFixed(2) || '0.00'}</span>
+                                <span className="text-gray-900 font-medium">S/. {order.subtotal?.toFixed(2) || '0.00'}</span>
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-gray-500">IGV (18%)</span>
-                                <span className="text-gray-900 font-medium">${order.tax_amount?.toFixed(2) || '0.00'}</span>
+                                <span className="text-gray-900 font-medium">S/. {order.tax_amount?.toFixed(2) || '0.00'}</span>
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-gray-500">Envío</span>
@@ -151,13 +151,13 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                     {order.shipping_type === 'PICKUP'
                                         ? 'Gratis'
                                         : order.shipping_cost > 0
-                                            ? `$${order.shipping_cost.toFixed(2)}`
+                                            ? `S/. ${order.shipping_cost.toFixed(2)}`
                                             : 'Pendiente de asignacion'}
                                 </span>
                             </div>
                             <div className="flex justify-between pt-3 border-t border-gray-100">
                                 <span className="text-lg font-bold text-gray-900">Total Pagado</span>
-                                <span className="text-xl font-black text-primary-600">${order.total_amount.toFixed(2)}</span>
+                                <span className="text-xl font-black text-primary-600">S/. {order.total_amount.toFixed(2)}</span>
                             </div>
                         </div>
                     </div>
@@ -217,7 +217,7 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                             <tr>
                                                 <td className="py-2 pr-2 leading-tight">{order.product_name}</td>
                                                 <td className="py-2 text-center">{order.quantity}</td>
-                                                <td className="py-2 text-right">${(order.quantity * order.unit_price).toFixed(2)}</td>
+                                                <td className="py-2 text-right">S/. {(order.quantity * order.unit_price).toFixed(2)}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -226,11 +226,11 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                 <div className="space-y-1 pt-2">
                                     <div className="flex justify-between text-[11px]">
                                         <span>SUBTOTAL:</span>
-                                        <span>${order.subtotal?.toFixed(2) || '0.00'}</span>
+                                        <span>S/. {order.subtotal?.toFixed(2) || '0.00'}</span>
                                     </div>
                                     <div className="flex justify-between text-[11px]">
                                         <span>IGV (18%):</span>
-                                        <span>${order.tax_amount?.toFixed(2) || '0.00'}</span>
+                                        <span>S/. {order.tax_amount?.toFixed(2) || '0.00'}</span>
                                     </div>
                                     <div className="flex justify-between text-[11px] italic text-gray-400">
                                         <span>ENVÍO:</span>
@@ -238,13 +238,13 @@ const OrderDetailModal = ({ order, onClose, statusDetails }) => {
                                             {order.shipping_type === 'PICKUP'
                                                 ? 'GRATIS'
                                                 : order.shipping_cost > 0
-                                                    ? `$${order.shipping_cost.toFixed(2)}`
+                                                    ? `S/. ${order.shipping_cost.toFixed(2)}`
                                                     : 'PENDIENTE'}
                                         </span>
                                     </div>
                                     <div className="flex justify-between text-sm font-bold pt-2">
                                         <span>TOTAL:</span>
-                                        <span>${order.total_amount.toFixed(2)}</span>
+                                        <span>S/. {order.total_amount.toFixed(2)}</span>
                                     </div>
                                 </div>
 
@@ -430,7 +430,7 @@ const Orders = () => {
                                                 </div>
                                                 <div className="flex-1">
                                                     <h3 className="font-bold text-gray-900">{order.product_name}</h3>
-                                                    <p className="text-sm text-gray-500">Cantidad: {order.quantity} • Total: ${order.total_amount.toFixed(2)}</p>
+                                                    <p className="text-sm text-gray-500">Cantidad: {order.quantity} • Total: S/. {order.total_amount.toFixed(2)}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center space-x-4">
@@ -441,7 +441,7 @@ const Orders = () => {
                                                     </p>
                                                     {order.shipping_type === 'DELIVERY' && order.shipping_cost > 0 && (
                                                         <p className="text-[10px] text-amber-600 font-bold mt-0.5">
-                                                            Envío: ${order.shipping_cost.toFixed(2)}
+                                                            Envío: S/. {order.shipping_cost.toFixed(2)}
                                                         </p>
                                                     )}
                                                 </div>

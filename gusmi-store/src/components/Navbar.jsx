@@ -19,15 +19,19 @@ const Navbar = () => {
 
     // Debounce navigation on search input and reset page to 1
     useEffect(() => {
+        // Only navigate if the search value has actually changed from what's in the URL
+        if (searchValue === searchQuery) return;
+
         const t = setTimeout(() => {
             if (searchValue && searchValue.trim().length > 0) {
                 navigate(`/?search=${encodeURIComponent(searchValue.trim())}&page=1`);
-            } else {
+            } else if (searchQuery) {
+                // Only redirect to /?page=1 if we were searching for something and now we are not
                 navigate('/?page=1');
             }
         }, 350);
         return () => clearTimeout(t);
-    }, [searchValue, navigate]);
+    }, [searchValue, searchQuery, navigate]);
 
     // Keep input in sync with URL (when user navigates externally)
     useEffect(() => {

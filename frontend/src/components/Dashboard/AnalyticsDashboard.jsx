@@ -167,25 +167,24 @@ export const AnalyticsDashboard = () => {
                         </select>
                     </div>
                     {/* Date filter */}
-                    <div className="flex items-center bg-white p-2 rounded-xl border border-[#dadce0] shadow-sm gap-1 w-full sm:w-auto">
-                        <Calendar size={18} className="text-[#5f6368] ml-2" />
+                    <div className="flex items-center bg-white p-2 rounded-xl border border-[#dadce0] shadow-sm gap-3 w-full sm:w-auto">
                         <div className="flex flex-col">
                             <label className="text-[10px] text-[#5f6368] font-medium px-1">Inicio</label>
                             <input
                                 type="date"
                                 value={dateRange.start}
                                 onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                                className="text-sm text-[#202124] border-none focus:ring-0 cursor-pointer"
+                                className="text-sm text-[#202124] border-none focus:ring-0 cursor-pointer p-0"
                             />
                         </div>
-                        <span className="text-[#5f6368] mt-3">-</span>
+                        <span className="text-[#dadce0] h-8 border-l"></span>
                         <div className="flex flex-col">
                             <label className="text-[10px] text-[#5f6368] font-medium px-1">Fin</label>
                             <input
                                 type="date"
                                 value={dateRange.end}
                                 onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                                className="text-sm text-[#202124] border-none focus:ring-0 cursor-pointer"
+                                className="text-sm text-[#202124] border-none focus:ring-0 cursor-pointer p-0"
                             />
                         </div>
                     </div>

@@ -33,6 +33,13 @@ class StripeService:
 
         # Detect if we should use mock mode
         is_mock = os.getenv("MOCK_STRIPE", "false").lower() == "true" or not api_key or api_key == "xxxx"
+        
+        # Log configuration setup (safely)
+        frontend_url = os.getenv("ECOMMERCE_FRONTEND_URL", "https://gusmi-store-public.vercel.app")
+        backend_url = os.getenv("BACKEND_URL", "https://backend-icaimporta.vercel.app")
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"StripeService: is_mock={is_mock}, frontend={frontend_url}, backend={backend_url}")
 
         if is_mock:
             import json
@@ -104,7 +111,7 @@ class StripeService:
             # Metadata values are limited to 500 characters in Stripe
             items_json = str([
                 {"product_id": str(i["product_id"]), "quantity": i["quantity"],
-                 "unit_price": str(i["unit_price"]), "product_name": i["product_name"][:30]} # truncate name to save space
+                 "unit_price": str(i["unit_price"]), "product_name": str(i.get("product_name", ""))[:30]} # truncate name to save space
                 for i in items
             ])
             if len(items_json) > 500:

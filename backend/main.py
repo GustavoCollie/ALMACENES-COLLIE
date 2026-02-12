@@ -144,7 +144,8 @@ async def log_requests(request: Request, call_next):
     return response
 
 # Configure CORS with dynamic origins
-raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174")
+default_origins = "http://localhost:5173,http://localhost:5174,https://icaimporta-pe.vercel.app"
+raw_origins = os.getenv("ALLOWED_ORIGINS", default_origins)
 origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
 logger.info(f"CORS configured for origins: {origins}")
 
@@ -226,7 +227,9 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={
             "error": "Internal Server Error",
             "message": str(exc),
-            "type": type(exc).__name__
+            "detail": f"[{type(exc).__name__}] {str(exc)}",
+            "type": type(exc).__name__,
+            "path": request.url.path
         },
         headers=headers
     )

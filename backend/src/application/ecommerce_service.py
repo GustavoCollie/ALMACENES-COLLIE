@@ -60,6 +60,7 @@ class EcommerceService:
         apply_discount: bool = False,
     ) -> dict:
         """Validate stock and create Stripe checkout session."""
+        logger.info(f"EcommerceService: Creando sesión para {customer_email} ({len(items)} items)")
         checkout_items = []
         for item in items:
             product = self._products.find_by_id(item.product_id)

@@ -38,7 +38,15 @@ export const createCheckoutSession = async (checkoutData) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.detail || 'Failed to create checkout session');
+            const errorMsg = errorData.detail || errorData.message || 'Failed to create checkout session';
+            console.error('Backend Error Details:', {
+                status: response.status,
+                type: errorData.type,
+                message: errorData.message,
+                detail: errorData.detail,
+                path: errorData.path
+            });
+            throw new Error(errorMsg);
         }
 
         return await response.json();

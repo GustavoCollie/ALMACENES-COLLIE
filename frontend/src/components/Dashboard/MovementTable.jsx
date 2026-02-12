@@ -173,20 +173,20 @@ export const MovementTable = ({ movements, loading }) => {
 
     return (
         <div className="bg-white">
-            <div className="flex items-center justify-between px-6 pt-4 border-b border-[#dadce0]">
-                <div className="flex items-center space-x-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between px-3 md:px-6 pt-4 border-b border-[#dadce0] gap-2">
+                <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide">
                     <button
                         onClick={() => setActiveSubTab('internal_entries')}
-                        className={`px-4 py-2.5 text-xs font-bold uppercase tracking-widest transition-all relative ${activeSubTab === 'internal_entries' ? 'text-[#1a73e8]' : 'text-[#5f6368] hover:bg-[#f8f9fa] rounded-t-lg'}`}
+                        className={`px-3 md:px-4 py-2.5 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all relative whitespace-nowrap ${activeSubTab === 'internal_entries' ? 'text-[#1a73e8]' : 'text-[#5f6368] hover:bg-[#f8f9fa] rounded-t-lg'}`}
                     >
-                        Ingresos y Consumo Interno
+                        Ingresos
                         {activeSubTab === 'internal_entries' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1a73e8] rounded-t-full"></div>}
                     </button>
                     <button
                         onClick={() => setActiveSubTab('sales')}
-                        className={`px-4 py-2.5 text-xs font-bold uppercase tracking-widest transition-all relative ${activeSubTab === 'sales' ? 'text-[#1a73e8]' : 'text-[#5f6368] hover:bg-[#f8f9fa] rounded-t-lg'}`}
+                        className={`px-3 md:px-4 py-2.5 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all relative whitespace-nowrap ${activeSubTab === 'sales' ? 'text-[#1a73e8]' : 'text-[#5f6368] hover:bg-[#f8f9fa] rounded-t-lg'}`}
                     >
-                        Salidas de Ventas
+                        Salidas
                         {activeSubTab === 'sales' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1a73e8] rounded-t-full"></div>}
                     </button>
                 </div>
@@ -197,7 +197,7 @@ export const MovementTable = ({ movements, loading }) => {
                         className="flex items-center space-x-2 px-3 py-1.5 bg-[#e6f4ea] text-[#1e8e3e] rounded-lg hover:bg-[#ceead6] transition-colors text-xs font-medium border border-[#1e8e3e]/20"
                     >
                         <FileSpreadsheet size={16} />
-                        <span>Exportar Excel</span>
+                        <span>Excel</span>
                     </button>
                 </div>
             </div>
@@ -208,97 +208,160 @@ export const MovementTable = ({ movements, loading }) => {
                     <p className="text-[#5f6368] font-medium text-sm">No hay movimientos en esta categoría.</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="google-table">
-                        <thead>
-                            <tr>
-                                <th>Tipo</th>
-                                <th>Producto</th>
-                                <th>Referencia</th>
-                                <th>Cantidad</th>
-                                <th>Responsable / Cliente</th>
-                                <th className="text-center">Docs</th>
-                                <th className="text-right">Fecha / Hora</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredMovements.map((move) => (
-                                <tr key={move.id} className="hover:bg-[#f8f9fa] transition-colors">
-                                    <td>
-                                        <div className="flex items-center space-x-3">
-                                            <div className={`p-2 rounded-full ${getStatusStyle(move)}`}>
-                                                {getMovementIcon(move)}
-                                            </div>
-                                            <span className="text-[11px] font-bold uppercase tracking-tighter">
-                                                {getMovementLabel(move)}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="flex items-center space-x-2">
-                                            <Tag size={14} className="text-[#5f6368]" />
-                                            <span className="text-sm font-medium text-[#202124] capitalize">
-                                                {move.product_name || '—'}
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-medium text-[#202124]">{move.reference}</span>
-                                            {move.is_returnable && (
-                                                <span className="text-[10px] font-bold text-[#b06000] bg-[#fef7e0] px-1.5 py-0.5 rounded border border-[#feefc3] w-fit mt-1">
-                                                    RETORNABLE
-                                                </span>
-                                            )}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span className="font-medium text-[#202124]">{move.quantity}</span>
-                                        <span className="text-xs text-[#5f6368] ml-1">uds</span>
-                                    </td>
-                                    <td>
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-medium text-[#202124]">{move.applicant || '—'}</span>
-                                            <span className="text-[11px] text-[#5f6368]">{move.applicant_area}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="flex items-center justify-center space-x-2">
-                                            {move.document_path && (
-                                                <a
-                                                    href={`${(import.meta.env.VITE_API_URL || 'http://localhost:8000').replace('/api/v1', '')}/${move.document_path.replace(/\\/g, '/')}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="p-2 text-[#5f6368] hover:bg-[#e8f0fe] hover:text-[#1a73e8] rounded-full transition-all"
-                                                    title="Ver Documento"
-                                                >
-                                                    <FileText size={18} />
-                                                </a>
-                                            )}
-                                            <button
-                                                onClick={() => generateReceiptPDF(move)}
-                                                className="p-2 text-[#5f6368] hover:bg-[#e6f4ea] hover:text-[#1e8e3e] rounded-full transition-all"
-                                                title="Imprimir Comprobante"
-                                            >
-                                                <Printer size={18} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td className="text-right">
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-sm font-medium text-[#202124]">
-                                                {new Date(move.date).toLocaleDateString('es-CL')}
-                                            </span>
-                                            <span className="text-[11px] text-[#5f6368]">
-                                                {new Date(move.date).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}
-                                            </span>
-                                        </div>
-                                    </td>
+                <>
+                    {/* Desktop table */}
+                    <div className="overflow-x-auto hidden md:block">
+                        <table className="google-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Producto</th>
+                                    <th>Referencia</th>
+                                    <th>Cantidad</th>
+                                    <th>Responsable</th>
+                                    <th className="text-center">Docs</th>
+                                    <th className="text-right">Fecha</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {filteredMovements.map((move) => (
+                                    <tr key={move.id} className="hover:bg-[#f8f9fa] transition-colors">
+                                        <td>
+                                            <div className="flex items-center space-x-3">
+                                                <div className={`p-2 rounded-full ${getStatusStyle(move)}`}>
+                                                    {getMovementIcon(move)}
+                                                </div>
+                                                <span className="text-[11px] font-bold uppercase tracking-tighter">
+                                                    {getMovementLabel(move)}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="flex items-center space-x-2">
+                                                <Tag size={14} className="text-[#5f6368]" />
+                                                <span className="text-sm font-medium text-[#202124] capitalize">
+                                                    {move.product_name || '—'}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-medium text-[#202124]">{move.reference}</span>
+                                                {move.is_returnable && (
+                                                    <span className="text-[10px] font-bold text-[#b06000] bg-[#fef7e0] px-1.5 py-0.5 rounded border border-[#feefc3] w-fit mt-1">
+                                                        RETORNABLE
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span className="font-medium text-[#202124]">{move.quantity}</span>
+                                            <span className="text-xs text-[#5f6368] ml-1">uds</span>
+                                        </td>
+                                        <td>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-medium text-[#202124]">{move.applicant || '—'}</span>
+                                                <span className="text-[11px] text-[#5f6368]">{move.applicant_area}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="flex items-center justify-center space-x-2">
+                                                {move.document_path && (
+                                                    <a
+                                                        href={`${(import.meta.env.VITE_API_URL || 'http://localhost:8000').replace('/api/v1', '')}/${move.document_path.replace(/\\/g, '/')}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="p-2 text-[#5f6368] hover:bg-[#e8f0fe] hover:text-[#1a73e8] rounded-full transition-all"
+                                                        title="Ver Documento"
+                                                    >
+                                                        <FileText size={18} />
+                                                    </a>
+                                                )}
+                                                <button
+                                                    onClick={() => generateReceiptPDF(move)}
+                                                    className="p-2 text-[#5f6368] hover:bg-[#e6f4ea] hover:text-[#1e8e3e] rounded-full transition-all"
+                                                    title="Imprimir Comprobante"
+                                                >
+                                                    <Printer size={18} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td className="text-right">
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-sm font-medium text-[#202124]">
+                                                    {new Date(move.date).toLocaleDateString('es-CL')}
+                                                </span>
+                                                <span className="text-[11px] text-[#5f6368]">
+                                                    {new Date(move.date).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Mobile card view */}
+                    <div className="md:hidden space-y-3 p-3">
+                        {filteredMovements.map((move) => (
+                            <div key={move.id} className="border border-[#e8eaed] rounded-2xl p-4 bg-white shadow-sm">
+                                <div className="flex items-start justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        <div className={`p-1.5 rounded-full ${getStatusStyle(move)}`}>
+                                            {getMovementIcon(move)}
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider">{getMovementLabel(move)}</span>
+                                            {move.is_returnable && (
+                                                <span className="ml-1.5 text-[8px] font-bold text-[#b06000] bg-[#fef7e0] px-1 py-0.5 rounded border border-[#feefc3]">RET</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <span className="text-[10px] text-[#5f6368]">{new Date(move.date).toLocaleDateString('es-CL')}</span>
+                                </div>
+                                <div className="space-y-1 mb-3">
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Producto</span>
+                                        <span className="text-[#202124] text-xs font-medium capitalize">{move.product_name || '—'}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Cantidad</span>
+                                        <span className="text-[#202124] text-xs font-bold">{move.quantity} uds</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Referencia</span>
+                                        <span className="text-[#202124] text-xs">{move.reference}</span>
+                                    </div>
+                                    {move.applicant && (
+                                        <div className="flex justify-between">
+                                            <span className="text-[#5f6368] text-xs">Responsable</span>
+                                            <span className="text-[#202124] text-xs">{move.applicant}</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex items-center justify-end gap-1 pt-3 border-t border-[#f1f3f4]">
+                                    {move.document_path && (
+                                        <a
+                                            href={`${(import.meta.env.VITE_API_URL || 'http://localhost:8000').replace('/api/v1', '')}/${move.document_path.replace(/\\/g, '/')}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-1.5 text-[#5f6368] hover:bg-[#e8f0fe] rounded-full"
+                                        >
+                                            <FileText size={16} />
+                                        </a>
+                                    )}
+                                    <button
+                                        onClick={() => generateReceiptPDF(move)}
+                                        className="p-1.5 text-[#5f6368] hover:bg-[#e6f4ea] rounded-full"
+                                    >
+                                        <Printer size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </>
             )}
         </div>
     );

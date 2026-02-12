@@ -28,19 +28,19 @@ export const SupplierForm = ({ onClose, onSubmit, loading, initialData, products
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#202124]/40 backdrop-blur-[2px] animate-fade-in">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[600px] overflow-hidden animate-scale-in flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-[#202124]/40 backdrop-blur-[2px] animate-fade-in modal-responsive">
+            <div className="bg-white md:rounded-2xl shadow-2xl w-full max-w-[600px] overflow-hidden animate-scale-in flex flex-col h-full md:h-auto max-h-none md:max-h-[90vh]">
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-[#dadce0] flex items-center justify-between">
+                <div className="px-4 md:px-8 py-4 md:py-6 border-b border-[#dadce0] flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center space-x-3">
-                        <div className="bg-[#e6f4ea] text-[#1e8e3e] p-2.5 rounded-lg">
-                            <Users size={24} />
+                        <div className="bg-[#e6f4ea] text-[#1e8e3e] p-2 rounded-lg">
+                            <Users size={20} className="md:w-6 md:h-6" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-medium text-[#202124]">
+                            <h3 className="text-base md:text-xl font-medium text-[#202124]">
                                 {initialData ? 'Editar Proveedor' : 'Nuevo Proveedor'}
                             </h3>
-                            <p className="text-xs text-[#5f6368] mt-0.5 font-medium">
+                            <p className="hidden md:block text-xs text-[#5f6368] mt-0.5 font-medium">
                                 {initialData ? 'Actualiza la información del socio comercial' : 'Registra un nuevo socio comercial en el directorio'}
                             </p>
                         </div>
@@ -50,7 +50,7 @@ export const SupplierForm = ({ onClose, onSubmit, loading, initialData, products
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-6 overflow-y-auto">
+                <form onSubmit={handleSubmit} className="p-4 md:p-8 space-y-6 overflow-y-auto flex-1">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-1.5 font-['Outfit']">
                             <label className="text-[13px] font-medium text-[#202124] ml-1">Nombre Comercial</label>
@@ -146,11 +146,11 @@ export const SupplierForm = ({ onClose, onSubmit, loading, initialData, products
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-end space-x-3 pt-6 border-t border-[#dadce0]">
+                    <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-6 border-t border-[#dadce0] bg-white sticky bottom-0 z-10">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-2 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all"
+                            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all font-['Outfit']"
                         >
                             Cancelar
                         </button>
@@ -158,7 +158,7 @@ export const SupplierForm = ({ onClose, onSubmit, loading, initialData, products
                             type="submit"
                             disabled={loading}
                             className={cn(
-                                "px-10 py-2.5 rounded-full text-sm font-medium shadow-sm transition-all active:scale-95 disabled:opacity-50 flex items-center space-x-2",
+                                "w-full sm:w-auto px-10 py-2.5 rounded-full text-sm font-medium shadow-sm transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center space-x-2 font-['Outfit']",
                                 initialData ? "bg-[#1e8e3e] hover:bg-[#1b7e37] text-white" : "bg-[#1a73e8] hover:bg-[#1765cc] text-white"
                             )}
                         >
@@ -167,7 +167,7 @@ export const SupplierForm = ({ onClose, onSubmit, loading, initialData, products
                             ) : (
                                 initialData ? <ExternalLink size={18} /> : <Plus size={18} />
                             )}
-                            <span>{initialData ? 'Guardar Cambios' : 'Registrar Proveedor'}</span>
+                            <span>{initialData ? 'Guardar Cambios' : 'Registrar'}</span>
                         </button>
                     </div>
                 </form>

@@ -186,3 +186,93 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--google-gray-600);
 }
+
+/* ===== Mobile Responsive Utilities ===== */
+
+/* Scrollbar-hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive table padding */
+@media (max-width: 767px) {
+  .google-table th {
+    padding: 10px 8px;
+    font-size: 10px;
+  }
+
+  .google-table td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+}
+
+/* Mobile card table: converts table rows into stacked cards */
+@media (max-width: 767px) {
+
+  .mobile-card-table table,
+  .mobile-card-table thead,
+  .mobile-card-table tbody,
+  .mobile-card-table tr,
+  .mobile-card-table th,
+  .mobile-card-table td {
+    display: block;
+  }
+
+  .mobile-card-table thead {
+    display: none;
+  }
+
+  .mobile-card-table tbody tr {
+    margin-bottom: 12px;
+    padding: 16px;
+    border: 1px solid var(--google-gray-200);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.1);
+  }
+
+  .mobile-card-table td {
+    padding: 4px 0;
+    border-bottom: none;
+    text-align: left;
+  }
+
+  .mobile-card-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--google-gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .mobile-card-table td:last-child {
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid var(--google-gray-100);
+  }
+}
+
+/* Modal full-screen on mobile */
+@media (max-width: 767px) {
+  .modal-responsive {
+    padding: 0 !important;
+  }
+
+  .modal-responsive>div {
+    max-width: 100% !important;
+    width: 100% !important;
+    min-height: 100vh;
+    min-height: 100dvh;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+}

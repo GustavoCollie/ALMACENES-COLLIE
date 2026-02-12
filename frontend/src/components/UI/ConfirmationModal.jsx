@@ -22,16 +22,16 @@ export const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }
                         {message}
                     </p>
 
-                    <div className="flex items-center justify-end space-x-3">
+                    <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3">
                         <button
                             onClick={onClose}
-                            className="px-6 py-2 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all"
+                            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all font-['Outfit']"
                         >
                             Cancelar
                         </button>
                         <button
                             onClick={onConfirm}
-                            className="px-8 py-2 rounded-full text-sm font-medium text-white bg-[#d93025] hover:bg-[#c5221f] transition-all shadow-sm active:scale-95"
+                            className="w-full sm:w-auto px-8 py-2.5 rounded-full text-sm font-medium text-white bg-[#d93025] hover:bg-[#c5221f] transition-all shadow-md active:scale-95 font-['Outfit']"
                         >
                             Confirmar
                         </button>

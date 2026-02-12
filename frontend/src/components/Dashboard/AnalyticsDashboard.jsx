@@ -36,7 +36,7 @@ export const AnalyticsDashboard = () => {
     useEffect(() => {
         inventoryService.getProducts()
             .then(res => setProducts(res.data || []))
-            .catch(() => {});
+            .catch(() => { });
     }, []);
 
     const fetchData = useCallback(async () => {
@@ -143,7 +143,7 @@ export const AnalyticsDashboard = () => {
         : null;
 
     return (
-        <div className="space-y-8 animate-fade-in p-2">
+        <div className="space-y-6 md:space-y-8 animate-fade-in p-0 md:p-2">
 
             {/* Header & Filters */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -151,14 +151,14 @@ export const AnalyticsDashboard = () => {
                     <h2 className="text-xl font-medium text-[#202124]">Inteligencia de Negocio</h2>
                     <p className="text-sm text-[#5f6368] mt-1">Análisis financiero y rendimiento de productos</p>
                 </div>
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex flex-col gap-3">
                     {/* Product filter */}
-                    <div className="flex items-center bg-white p-2 rounded-xl border border-[#dadce0] shadow-sm">
-                        <Filter size={18} className="text-[#5f6368] ml-2 mr-1" />
+                    <div className="flex items-center bg-white p-2 rounded-xl border border-[#dadce0] shadow-sm w-full sm:w-auto">
+                        <Filter size={18} className="text-[#5f6368] ml-2 mr-1 shrink-0" />
                         <select
                             value={selectedProduct}
                             onChange={(e) => setSelectedProduct(e.target.value)}
-                            className="text-sm text-[#202124] border-none focus:ring-0 cursor-pointer bg-transparent pr-6"
+                            className="text-sm text-[#202124] border-none focus:ring-0 cursor-pointer bg-transparent pr-6 w-full"
                         >
                             <option value="">Todos los productos</option>
                             {products.map(p => (
@@ -167,7 +167,7 @@ export const AnalyticsDashboard = () => {
                         </select>
                     </div>
                     {/* Date filter */}
-                    <div className="flex items-center bg-white p-2 rounded-xl border border-[#dadce0] shadow-sm gap-1">
+                    <div className="flex items-center bg-white p-2 rounded-xl border border-[#dadce0] shadow-sm gap-1 w-full sm:w-auto">
                         <Calendar size={18} className="text-[#5f6368] ml-2" />
                         <div className="flex flex-col">
                             <label className="text-[10px] text-[#5f6368] font-medium px-1">Inicio</label>
@@ -208,7 +208,7 @@ export const AnalyticsDashboard = () => {
             )}
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
                 <KpiCard
                     title="Ingresos Totales"
                     value={formatCurrency(data.total_revenue)}
@@ -250,11 +250,11 @@ export const AnalyticsDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                 {/* Monthly Evolution: Purchase Cost vs Sales Revenue */}
-                <div className="bg-white p-6 rounded-2xl border border-[#dadce0] shadow-sm">
-                    <h3 className="text-lg font-medium text-[#202124] mb-6">
-                        Evolución de Ingresos y Ganancias
+                <div className="bg-white p-3 md:p-6 rounded-2xl border border-[#dadce0] shadow-sm">
+                    <h3 className="text-base md:text-lg font-medium text-[#202124] mb-4 md:mb-6">
+                        Evolución de Ingresos
                     </h3>
-                    <div className="h-[300px] w-full">
+                    <div className="h-[250px] md:h-[300px] w-full">
                         {monthlyData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={monthlyData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
@@ -279,9 +279,9 @@ export const AnalyticsDashboard = () => {
                 </div>
 
                 {/* Top 5 Products: Cost, Sales, Margin */}
-                <div className="bg-white p-6 rounded-2xl border border-[#dadce0] shadow-sm">
-                    <h3 className="text-lg font-medium text-[#202124] mb-6">Productos Más Rentables (Top 5)</h3>
-                    <div className="h-[300px] w-full">
+                <div className="bg-white p-3 md:p-6 rounded-2xl border border-[#dadce0] shadow-sm">
+                    <h3 className="text-base md:text-lg font-medium text-[#202124] mb-4 md:mb-6">Productos Más Rentables</h3>
+                    <div className="h-[250px] md:h-[300px] w-full">
                         {topProducts.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart
@@ -302,10 +302,10 @@ export const AnalyticsDashboard = () => {
                                         type="category"
                                         dataKey="product_name"
                                         stroke="#5f6368"
-                                        fontSize={11}
+                                        fontSize={10}
                                         tickLine={false}
                                         axisLine={false}
-                                        width={120}
+                                        width={80}
                                     />
                                     <Tooltip
                                         cursor={{ fill: '#f1f3f4' }}
@@ -367,10 +367,10 @@ export const AnalyticsDashboard = () => {
             </div>
 
             {/* Unit Cost vs Sale Price per Product */}
-            <div className="bg-white p-6 rounded-2xl border border-[#dadce0] shadow-sm">
-                <h3 className="text-lg font-medium text-[#202124] mb-2">Costo de Compra vs Precio de Venta Unitario</h3>
-                <p className="text-sm text-[#5f6368] mb-6">Ganancia por unidad vendida de cada producto</p>
-                <div className="h-[350px] w-full">
+            <div className="bg-white p-3 md:p-6 rounded-2xl border border-[#dadce0] shadow-sm">
+                <h3 className="text-base md:text-lg font-medium text-[#202124] mb-2">Costo vs Precio Venta</h3>
+                <p className="text-xs md:text-sm text-[#5f6368] mb-4 md:mb-6">Ganancia por unidad vendida</p>
+                <div className="h-[280px] md:h-[350px] w-full">
                     {unitCosts.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
@@ -391,10 +391,10 @@ export const AnalyticsDashboard = () => {
                                     type="category"
                                     dataKey="product_name"
                                     stroke="#5f6368"
-                                    fontSize={11}
+                                    fontSize={10}
                                     tickLine={false}
                                     axisLine={false}
-                                    width={120}
+                                    width={80}
                                 />
                                 <Tooltip
                                     cursor={{ fill: '#f1f3f4' }}
@@ -441,14 +441,14 @@ export const AnalyticsDashboard = () => {
             </div>
 
             {/* Price Variation Over Time */}
-            <div className="bg-white p-6 rounded-2xl border border-[#dadce0] shadow-sm">
-                <h3 className="text-lg font-medium text-[#202124] mb-1">Variación de Precios en el Tiempo</h3>
+            <div className="bg-white p-3 md:p-6 rounded-2xl border border-[#dadce0] shadow-sm">
+                <h3 className="text-base md:text-lg font-medium text-[#202124] mb-1">Variación de Precios</h3>
                 <p className="text-sm text-[#5f6368] mb-6">
                     Precio unitario de compra vs venta día a día
                     {priceData?.product_name && <span className="font-medium text-[#1a73e8]"> — {priceData.product_name}</span>}
                     {priceData?.month_label && <span className="text-[#5f6368]"> ({priceData.month_label})</span>}
                 </p>
-                <div className="h-[300px] w-full">
+                <div className="h-[250px] md:h-[300px] w-full">
                     {priceLoading ? (
                         <div className="flex items-center justify-center h-full">
                             <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#1a73e8] border-b-transparent"></div>
@@ -518,14 +518,14 @@ export const AnalyticsDashboard = () => {
 };
 
 const KpiCard = ({ title, value, icon: Icon, color, bg }) => (
-    <div className="bg-white p-6 rounded-2xl border border-[#dadce0] shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white p-4 md:p-6 rounded-2xl border border-[#dadce0] shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-start justify-between">
             <div>
-                <p className="text-sm font-medium text-[#5f6368]">{title}</p>
-                <h3 className="text-2xl font-bold text-[#202124] mt-1">{value}</h3>
+                <p className="text-xs md:text-sm font-medium text-[#5f6368]">{title}</p>
+                <h3 className="text-lg md:text-2xl font-bold text-[#202124] mt-1">{value}</h3>
             </div>
-            <div className={`p-3 rounded-xl ${bg} ${color}`}>
-                <Icon size={24} />
+            <div className={`p-2 md:p-3 rounded-xl ${bg} ${color}`}>
+                <Icon size={20} />
             </div>
         </div>
     </div>

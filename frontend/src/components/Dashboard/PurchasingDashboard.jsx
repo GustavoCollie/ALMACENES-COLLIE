@@ -181,37 +181,37 @@ export const PurchasingDashboard = ({
 
             {/* Actions Section */}
             {showActions && (
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-wrap items-center gap-3">
                     <button
                         onClick={onAddOrder}
-                        className="flex items-center space-x-2 bg-[#1a73e8] text-white px-6 py-3 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm"
+                        className="flex items-center space-x-2 bg-[#1a73e8] text-white px-4 md:px-6 py-2.5 md:py-3 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm flex-1 sm:flex-initial justify-center"
                     >
                         <Plus size={18} />
-                        <span>Nueva Orden de Compra</span>
+                        <span>Nueva OC</span>
                     </button>
                     <button
                         onClick={onAddProduct}
-                        className="flex items-center space-x-2 bg-white text-[#1a73e8] border border-[#1a73e8] px-6 py-3 rounded-full font-medium text-sm hover:bg-[#e8f0fe] transition-all shadow-sm"
+                        className="flex items-center space-x-2 bg-white text-[#1a73e8] border border-[#1a73e8] px-4 md:px-6 py-2.5 md:py-3 rounded-full font-medium text-sm hover:bg-[#e8f0fe] transition-all shadow-sm flex-1 sm:flex-initial justify-center"
                     >
                         <Package size={18} />
-                        <span>Registrar Nuevo Artículo</span>
+                        <span>Artículo</span>
                     </button>
                     <button
                         onClick={onAddSupplier}
-                        className="flex items-center space-x-2 bg-white text-[#5f6368] border border-[#dadce0] px-6 py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-all"
+                        className="flex items-center space-x-2 bg-white text-[#5f6368] border border-[#dadce0] px-4 md:px-6 py-2.5 md:py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-all flex-1 sm:flex-initial justify-center"
                     >
                         <Users size={18} />
-                        <span>Gestionar Proveedores</span>
+                        <span>Proveedores</span>
                     </button>
                 </div>
             )}
 
             {/* Orders Table */}
             <div className="bg-white border border-[#dadce0] rounded-2xl overflow-hidden shadow-sm">
-                <div className="px-6 py-5 border-b border-[#dadce0] bg-[#f8f9fa] flex items-center justify-between">
+                <div className="px-4 md:px-6 py-4 md:py-5 border-b border-[#dadce0] bg-[#f8f9fa] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                         <h2 className="text-base font-medium text-[#202124]">Órdenes de Compra</h2>
-                        <p className="text-xs text-[#5f6368] mt-0.5">Historial completo y seguimiento de suministros</p>
+                        <p className="text-xs text-[#5f6368] mt-0.5">Seguimiento de suministros</p>
                     </div>
                     <div className="flex items-center space-x-3">
                         <button
@@ -219,7 +219,7 @@ export const PurchasingDashboard = ({
                             className="flex items-center space-x-2 px-3 py-1.5 bg-[#e6f4ea] text-[#1e8e3e] rounded-lg hover:bg-[#ceead6] transition-colors text-xs font-medium border border-[#1e8e3e]/20"
                         >
                             <FileSpreadsheet size={16} />
-                            <span>Exportar Excel</span>
+                            <span>Excel</span>
                         </button>
                         <span className="bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
                             {orders.length} TOTAL
@@ -227,7 +227,8 @@ export const PurchasingDashboard = ({
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Desktop table */}
+                <div className="overflow-x-auto hidden md:block">
                     <table className="google-table">
                         <thead>
                             <tr>
@@ -294,14 +295,14 @@ export const PurchasingDashboard = ({
                                                             setShowReceiveModal(true);
                                                         }}
                                                         className="p-2 text-[#1e8e3e] hover:bg-[#e6f4ea] rounded-full transition-all"
-                                                        title="Recibir Pedido (Ingresar a Almacén)"
+                                                        title="Recibir Pedido"
                                                     >
                                                         <CheckCircle size={18} />
                                                     </button>
                                                     <button
                                                         onClick={() => onUpdateOrderStatus(order.id, 'REJECTED')}
                                                         className="p-2 text-[#d93025] hover:bg-[#fce8e6] rounded-full transition-all"
-                                                        title="Rechazar Pedido"
+                                                        title="Rechazar"
                                                     >
                                                         <XCircle size={18} />
                                                     </button>
@@ -310,14 +311,14 @@ export const PurchasingDashboard = ({
                                                             <button
                                                                 onClick={() => onEditOrder(order)}
                                                                 className="p-2 text-[#5f6368] hover:bg-[#f8f9fa] rounded-full transition-all"
-                                                                title="Editar Orden"
+                                                                title="Editar"
                                                             >
                                                                 <Edit size={18} />
                                                             </button>
                                                             <button
                                                                 onClick={() => onDeleteOrder(order.id)}
                                                                 className="p-2 text-[#d93025] hover:bg-[#fce8e6] rounded-full transition-all"
-                                                                title="Eliminar Orden"
+                                                                title="Eliminar"
                                                             >
                                                                 <Trash2 size={18} />
                                                             </button>
@@ -333,6 +334,54 @@ export const PurchasingDashboard = ({
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile card view */}
+                <div className="md:hidden space-y-3 p-3">
+                    {orders.map((order) => (
+                        <div key={order.id} className="border border-[#e8eaed] rounded-2xl p-4 bg-white shadow-sm">
+                            <div className="flex items-start justify-between mb-2">
+                                <div>
+                                    <span className="font-medium text-[#202124] text-sm">OC-{order.id.substring(0, 6)}</span>
+                                    <p className="text-[10px] text-[#5f6368]">{new Date(order.created_at).toLocaleDateString('es-CL')}</p>
+                                </div>
+                                <StatusBadge status={order.status} />
+                            </div>
+                            <div className="space-y-1 text-sm mb-3">
+                                <div className="flex justify-between">
+                                    <span className="text-[#5f6368] text-xs">Proveedor</span>
+                                    <span className="text-[#202124] text-xs font-medium">{order.supplier_name || 'Proveedor'}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[#5f6368] text-xs">Producto</span>
+                                    <span className="text-[#202124] text-xs font-medium">{order.product_name || 'Producto'} ×{order.quantity}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[#5f6368] text-xs">Total</span>
+                                    <span className="text-[#202124] text-sm font-bold">${parseFloat(order.total_amount).toLocaleString()}</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end gap-1 pt-3 border-t border-[#f1f3f4]">
+                                {order.status === 'PENDING' || order.status === 'ARRIVED' ? (
+                                    <>
+                                        {order.status === 'PENDING' && (
+                                            <button onClick={() => onUpdateOrderStatus(order.id, 'ARRIVED')} className="p-1.5 text-[#1a73e8] hover:bg-[#e8f0fe] rounded-full"><Truck size={16} /></button>
+                                        )}
+                                        <button onClick={() => { setSelectedOrder(order); setShowReceiveModal(true); }} className="p-1.5 text-[#1e8e3e] hover:bg-[#e6f4ea] rounded-full"><CheckCircle size={16} /></button>
+                                        <button onClick={() => onUpdateOrderStatus(order.id, 'REJECTED')} className="p-1.5 text-[#d93025] hover:bg-[#fce8e6] rounded-full"><XCircle size={16} /></button>
+                                        {order.status === 'PENDING' && (
+                                            <>
+                                                <button onClick={() => onEditOrder(order)} className="p-1.5 text-[#5f6368] hover:bg-[#f8f9fa] rounded-full"><Edit size={16} /></button>
+                                                <button onClick={() => onDeleteOrder(order.id)} className="p-1.5 text-[#d93025] hover:bg-[#fce8e6] rounded-full"><Trash2 size={16} /></button>
+                                            </>
+                                        )}
+                                    </>
+                                ) : (
+                                    <span className="text-[10px] font-bold text-[#dadce0] uppercase tracking-widest">Cerrado</span>
+                                )}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 

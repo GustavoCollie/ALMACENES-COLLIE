@@ -329,12 +329,12 @@ export const SalesDashboard = ({
             </div>
 
             {attentionOrders.length > 0 && (
-                <div className="bg-[#fce8e6] border border-[#f5c2c7] px-6 py-4 rounded-2xl flex items-center justify-between animate-pulse">
+                <div className="bg-[#fce8e6] border border-[#f5c2c7] px-4 md:px-6 py-3 md:py-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-pulse">
                     <div className="flex items-center space-x-3 text-[#d93025]">
                         <AlertTriangle size={20} />
                         <div>
                             <p className="text-sm font-bold">Atención Requerida</p>
-                            <p className="text-xs opacity-90">Hay {attentionOrders.length} pedidos pendientes con más de 24 horas sin atender.</p>
+                            <p className="text-xs opacity-90">Hay {attentionOrders.length} pedidos pendientes con más de 24 horas.</p>
                         </div>
                     </div>
                     <button
@@ -351,10 +351,10 @@ export const SalesDashboard = ({
 
             {/* Orders Table */}
             <div className="bg-white border border-[#dadce0] rounded-2xl overflow-hidden shadow-sm">
-                <div className="px-6 py-5 border-b border-[#dadce0] bg-[#f8f9fa] flex items-center justify-between">
+                <div className="px-4 md:px-6 py-4 md:py-5 border-b border-[#dadce0] bg-[#f8f9fa] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                         <h2 className="text-base font-medium text-[#202124]">Órdenes de Venta</h2>
-                        <p className="text-xs text-[#5f6368] mt-0.5">Gestión de salida y facturación a clientes</p>
+                        <p className="text-xs text-[#5f6368] mt-0.5">Gestión de salida y facturación</p>
                     </div>
                     <div className="flex items-center space-x-3">
                         <button
@@ -362,15 +362,16 @@ export const SalesDashboard = ({
                             className="flex items-center space-x-2 px-3 py-1.5 bg-[#e6f4ea] text-[#1e8e3e] rounded-lg hover:bg-[#ceead6] transition-colors text-xs font-medium border border-[#1e8e3e]/20"
                         >
                             <FileSpreadsheet size={16} />
-                            <span>Exportar Excel</span>
+                            <span>Excel</span>
                         </button>
                         <span className="bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                            {filteredOrders.length} FILTRADOS / {orders.length} TOTAL
+                            {filteredOrders.length}/{orders.length}
                         </span>
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Desktop table */}
+                <div className="overflow-x-auto hidden md:block">
                     <table className="google-table">
                         <thead>
                             <tr>
@@ -477,6 +478,59 @@ export const SalesDashboard = ({
                             })}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile card view */}
+                <div className="md:hidden space-y-3 p-3">
+                    {filteredOrders.map((order) => {
+                        const isCritical = attentionOrders.some(ao => ao.id === order.id);
+                        const queuePos = queuePositionMap[order.id];
+                        const isNextToDispatch = queuePos === 1;
+                        return (
+                            <div key={order.id} className={`border border-[#e8eaed] rounded-2xl p-4 bg-white shadow-sm ${isNextToDispatch ? 'border-l-4 border-l-[#1a73e8] bg-[#e8f0fe]/30' : ''}`}>
+                                <div className="flex items-start justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        {queuePos && (
+                                            <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold ${isNextToDispatch ? 'bg-[#1a73e8] text-white' : 'bg-[#f1f3f4] text-[#5f6368]'}`}>
+                                                {queuePos}
+                                            </span>
+                                        )}
+                                        <div>
+                                            <span className="font-medium text-[#202124] text-sm">OV-{order.id.substring(0, 6)}</span>
+                                            {isCritical && <div className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block ml-2" />}
+                                        </div>
+                                    </div>
+                                    <StatusBadge status={order.status} />
+                                </div>
+                                <div className="space-y-1 text-sm mb-3">
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Cliente</span>
+                                        <span className="text-[#202124] text-xs font-medium">{order.customer_name}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Producto</span>
+                                        <span className="text-[#202124] text-xs font-medium">{order.product_name} ×{order.quantity}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Total</span>
+                                        <span className="text-[#202124] text-sm font-bold">${parseFloat(order.total_amount).toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Envío</span>
+                                        <span className="text-[#202124] text-xs">{order.shipping_type}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between pt-3 border-t border-[#f1f3f4]">
+                                    <span className="text-[10px] text-[#5f6368]">{new Date(order.created_at).toLocaleDateString('es-CL')}</span>
+                                    <div className="flex items-center gap-1">
+                                        <button onClick={() => onEditOrder(order)} className="p-1.5 text-[#5f6368] hover:bg-[#f1f3f4] rounded-full"><Pencil size={14} /></button>
+                                        <button onClick={() => onDeleteOrder(order.id)} className="p-1.5 text-[#5f6368] hover:bg-[#ffebee] rounded-full"><Trash2 size={14} /></button>
+                                        <button onClick={() => generateTicketPDF(order)} className="p-1.5 text-[#5f6368] hover:bg-[#f1f3f4] rounded-full"><Printer size={14} /></button>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 

@@ -195,31 +195,31 @@ function App() {
   return (
     <div className="min-h-screen bg-white font-['Inter'] text-[#3c4043]">
       {/* Google-style Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-[#dadce0] px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="p-1 hover:bg-[#f1f3f4] rounded-full transition-colors cursor-pointer overflow-hidden w-10 h-10 flex items-center justify-center">
-            <img src="/logo.png" alt="IcaImporta.pe" className="w-8 h-8 object-contain" />
+      <header className="sticky top-0 z-40 bg-white border-b border-[#dadce0] px-3 md:px-6 h-14 md:h-16 flex items-center justify-between gap-2">
+        <div className="flex items-center space-x-2 shrink-0">
+          <div className="p-1 hover:bg-[#f1f3f4] rounded-full transition-colors cursor-pointer overflow-hidden w-8 h-8 md:w-10 md:h-10 flex items-center justify-center">
+            <img src="/logo.png" alt="IcaImporta.pe" className="w-6 h-6 md:w-8 md:h-8 object-contain" />
           </div>
-          <span className="text-[22px] font-medium text-[#202124] tracking-tight ml-1">IcaImporta.pe <span className="text-[#5f6368] font-normal">Almacenes</span></span>
+          <span className="text-base md:text-[22px] font-medium text-[#202124] tracking-tight ml-1">IcaImporta<span className="hidden sm:inline text-[#5f6368] font-normal">.pe Almacenes</span></span>
         </div>
 
-        <div className="flex-1 max-w-2xl mx-12">
+        <div className="flex-1 max-w-2xl mx-2 md:mx-12">
           <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#5f6368]">
+            <div className="absolute inset-y-0 left-0 pl-3 md:pl-4 flex items-center pointer-events-none text-[#5f6368]">
               <Search size={18} />
             </div>
             <input
               type="text"
-              placeholder="Buscar en inventario..."
+              placeholder="Buscar..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#f1f3f4] border-transparent border-2 focus:bg-white focus:border-[#1a73e8] focus:ring-0 rounded-lg py-2.5 pl-11 pr-4 text-sm transition-all outline-none"
+              className="w-full bg-[#f1f3f4] border-transparent border-2 focus:bg-white focus:border-[#1a73e8] focus:ring-0 rounded-lg py-2 md:py-2.5 pl-9 md:pl-11 pr-3 md:pr-4 text-sm transition-all outline-none"
             />
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="text-right hidden sm:block">
+        <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
+          <div className="text-right hidden md:block">
             <p className="text-xs font-semibold text-[#202124]">Jefe de Almacén</p>
             <p className="text-[10px] text-[#5f6368] uppercase tracking-wider">Administrador</p>
           </div>
@@ -236,13 +236,13 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-[1400px] mx-auto p-6 md:p-8">
+      <main className="max-w-[1400px] mx-auto px-3 py-4 md:p-6 lg:p-8">
         {/* Navigation Tabs - Google Style */}
-        <div className="flex items-center space-x-1 border-b border-[#dadce0] mb-8">
+        <div className="flex items-center space-x-1 border-b border-[#dadce0] mb-6 md:mb-8 overflow-x-auto scrollbar-hide">
           {[
-            { id: 'inventory', label: 'Registrar Artículo', icon: Plus },
-            { id: 'suppliers', label: 'Gestionar Proveedores', icon: Users },
-            { id: 'purchasing', label: 'Nueva OC', icon: ShoppingBag },
+            { id: 'inventory', label: 'Artículos', icon: Plus },
+            { id: 'suppliers', label: 'Proveedores', icon: Users },
+            { id: 'purchasing', label: 'Compras', icon: ShoppingBag },
             { id: 'sales', label: 'Ventas', icon: ShoppingCart },
             { id: 'business', label: 'Negocio', icon: BarChart2 },
             { id: 'movements', label: 'Movimientos', icon: History }
@@ -250,13 +250,13 @@ function App() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center space-x-3 px-6 py-4 text-sm font-medium transition-all relative ${activeTab === tab.id
+              className={`flex items-center space-x-2 md:space-x-3 px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium transition-all relative whitespace-nowrap shrink-0 ${activeTab === tab.id
                 ? 'text-[#1a73e8]'
                 : 'text-[#5f6368] hover:bg-[#f8f9fa] rounded-t-lg'
                 }`}
             >
               <tab.icon size={18} />
-              <span>{tab.label}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
               {activeTab === tab.id && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1a73e8] rounded-t-full"></div>
               )}
@@ -266,17 +266,17 @@ function App() {
 
         {activeTab === 'inventory' && (
           <div className="space-y-8 animate-fade-in">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-medium text-[#202124]">Catálogo de Productos</h2>
-                <p className="text-sm text-[#5f6368] mt-1">Gestiona las existencias y detalles técnicos de tu almacén</p>
+                <h2 className="text-lg md:text-xl font-medium text-[#202124]">Catálogo de Productos</h2>
+                <p className="text-xs md:text-sm text-[#5f6368] mt-1">Gestiona las existencias y detalles técnicos</p>
               </div>
               <button
                 onClick={() => {
                   setEditingProduct(null);
                   setShowForm(true);
                 }}
-                className="bg-[#1a73e8] text-white px-6 py-2.5 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm active:scale-95 flex items-center space-x-2 font-['Outfit']"
+                className="bg-[#1a73e8] text-white px-5 md:px-6 py-2.5 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm active:scale-95 flex items-center space-x-2 font-['Outfit'] w-full sm:w-auto justify-center"
               >
                 <Plus size={18} />
                 <span>Nuevo Producto</span>
@@ -318,17 +318,17 @@ function App() {
 
         {activeTab === 'suppliers' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-medium text-[#202124]">Gestión de Proveedores</h2>
-                <p className="text-sm text-[#5f6368] mt-1">Directorio central de socios comerciales y abastecimiento</p>
+                <h2 className="text-lg md:text-xl font-medium text-[#202124]">Gestión de Proveedores</h2>
+                <p className="text-xs md:text-sm text-[#5f6368] mt-1">Directorio de socios comerciales</p>
               </div>
               <button
                 onClick={() => {
                   setEditingSupplier(null);
                   setShowSupplierForm(true);
                 }}
-                className="bg-[#1a73e8] text-white px-6 py-2.5 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm active:scale-95 flex items-center space-x-2"
+                className="bg-[#1a73e8] text-white px-5 md:px-6 py-2.5 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm active:scale-95 flex items-center space-x-2 w-full sm:w-auto justify-center"
               >
                 <Plus size={18} />
                 <span>Nuevo Proveedor</span>
@@ -348,17 +348,17 @@ function App() {
 
         {activeTab === 'purchasing' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-medium text-[#202124]">Gestión de Compras</h2>
-                <p className="text-sm text-[#5f6368] mt-1">Órdenes de compra, recepciones y KPIs de abastecimiento</p>
+                <h2 className="text-lg md:text-xl font-medium text-[#202124]">Gestión de Compras</h2>
+                <p className="text-xs md:text-sm text-[#5f6368] mt-1">Órdenes de compra y KPIs</p>
               </div>
               <button
                 onClick={() => {
                   setEditingPurchaseOrder(null);
                   setShowOrderForm(true);
                 }}
-                className="bg-[#1a73e8] text-white px-6 py-2.5 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm active:scale-95 flex items-center space-x-2 font-['Outfit']"
+                className="bg-[#1a73e8] text-white px-5 md:px-6 py-2.5 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm active:scale-95 flex items-center space-x-2 font-['Outfit'] w-full sm:w-auto justify-center"
               >
                 <Plus size={18} />
                 <span>Nueva Orden de Compra</span>

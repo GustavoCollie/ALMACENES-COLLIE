@@ -63,9 +63,9 @@ export const SupplierTable = ({ suppliers, onEdit, onDelete, loading }) => {
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h3 className="text-[13px] font-bold text-[#5f6368] uppercase tracking-wider ml-1">Directorio de Proveedores</h3>
-                <div className="relative w-64 group">
+                <div className="relative w-full sm:w-64 group">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5f6368] group-focus-within:text-[#1a73e8] transition-colors" size={16} />
                     <input
                         type="text"
@@ -78,7 +78,8 @@ export const SupplierTable = ({ suppliers, onEdit, onDelete, loading }) => {
             </div>
 
             <div className="bg-white border border-[#dadce0] rounded-2xl overflow-hidden shadow-sm">
-                <div className="overflow-x-auto">
+                {/* Desktop table */}
+                <div className="overflow-x-auto hidden md:block">
                     <table className="google-table">
                         <thead>
                             <tr>
@@ -165,6 +166,52 @@ export const SupplierTable = ({ suppliers, onEdit, onDelete, loading }) => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile card view */}
+                <div className="md:hidden space-y-3 p-3">
+                    {filteredSuppliers.map((s) => (
+                        <div key={s.id} className="border border-[#e8eaed] rounded-2xl p-4 bg-white shadow-sm">
+                            <div className="flex items-start gap-3 mb-3">
+                                <div className="w-10 h-10 rounded-lg bg-[#e8f0fe] text-[#1a73e8] flex items-center justify-center font-bold text-base shrink-0">
+                                    {s.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-medium text-[#202124]">{s.name}</div>
+                                    <div className="text-[11px] text-[#5f6368] flex items-center">
+                                        <Mail size={10} className="mr-1 shrink-0" /> <span className="truncate">{s.email}</span>
+                                    </div>
+                                    <span className="font-mono text-[10px] bg-[#f1f3f4] px-1.5 py-0.5 rounded text-[#5f6368] mt-1 inline-block">{s.ruc}</span>
+                                </div>
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#e6f4ea] text-[#1e8e3e] uppercase border border-[#ceead6] shrink-0">Activo</span>
+                            </div>
+                            <div className="space-y-1 mb-3">
+                                {s.contact_name && (
+                                    <div className="flex justify-between">
+                                        <span className="text-[#5f6368] text-xs">Contacto</span>
+                                        <span className="text-[#202124] text-xs font-medium">{s.contact_name}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between">
+                                    <span className="text-[#5f6368] text-xs">Productos</span>
+                                    {s.products && s.products.length > 0 ? (
+                                        <button
+                                            onClick={() => setViewingProductsSupplier(s)}
+                                            className="text-[11px] font-medium text-[#1a73e8]"
+                                        >
+                                            {s.products.length} {s.products.length === 1 ? 'Producto' : 'Productos'}
+                                        </button>
+                                    ) : (
+                                        <span className="text-[11px] text-[#bdc1c6] italic">Sin productos</span>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end gap-1 pt-3 border-t border-[#f1f3f4]">
+                                <button onClick={() => onEdit(s)} className="p-1.5 text-[#5f6368] hover:bg-[#f1f3f4] rounded-full"><ExternalLink size={16} /></button>
+                                <button onClick={() => { if (window.confirm('¿Eliminar?')) onDelete(s.id); }} className="p-1.5 text-[#5f6368] hover:bg-[#fce8e6] rounded-full"><X size={16} /></button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
                 {filteredSuppliers.length === 0 && (
                     <div className="py-24 text-center border-t border-[#f1f3f4]">

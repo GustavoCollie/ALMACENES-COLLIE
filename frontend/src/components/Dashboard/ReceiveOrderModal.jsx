@@ -42,17 +42,17 @@ export const ReceiveOrderModal = ({ order, isOpen, onClose, onConfirm, loading }
     };
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#202124]/40 backdrop-blur-[2px] animate-fade-in">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[560px] overflow-hidden animate-scale-in">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-0 md:p-4 bg-[#202124]/40 backdrop-blur-[2px] animate-fade-in modal-responsive">
+            <div className="bg-white md:rounded-2xl shadow-2xl w-full max-w-[560px] overflow-hidden animate-scale-in flex flex-col h-full md:h-auto max-h-none md:max-h-[90vh]">
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-[#dadce0] flex items-center justify-between">
+                <div className="px-4 md:px-8 py-4 md:py-6 border-b border-[#dadce0] flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center space-x-3">
-                        <div className="bg-[#e6f4ea] text-[#1e8e3e] p-2.5 rounded-lg">
-                            <CheckCircle size={24} />
+                        <div className="bg-[#e6f4ea] text-[#1e8e3e] p-2 rounded-lg">
+                            <CheckCircle size={20} className="md:w-6 md:h-6" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-medium text-[#202124]">Recibir Mercadería</h2>
-                            <p className="text-xs text-[#5f6368] mt-0.5 font-medium tracking-wide">Órden de Compra OC-{order.id.substring(0, 6)}</p>
+                            <h2 className="text-base md:text-xl font-medium text-[#202124]">Recibir Mercadería</h2>
+                            <p className="hidden md:block text-xs text-[#5f6368] mt-0.5 font-medium tracking-wide">Órden OC-{order.id.substring(0, 6)}</p>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-[#f1f3f4] rounded-full transition-colors">
@@ -60,7 +60,7 @@ export const ReceiveOrderModal = ({ order, isOpen, onClose, onConfirm, loading }
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
+                <form onSubmit={handleSubmit} className="p-4 md:p-8 space-y-6 overflow-y-auto flex-1">
                     {error && (
                         <div className="bg-[#fce8e6] border border-[#f5c2c7] rounded-xl p-4 flex items-center text-[#d93025] text-sm animate-shake">
                             <AlertCircle size={18} className="mr-3 flex-shrink-0" />
@@ -152,18 +152,18 @@ export const ReceiveOrderModal = ({ order, isOpen, onClose, onConfirm, loading }
                         </div>
                     </div>
 
-                    <div className="pt-6 border-t border-[#dadce0] flex items-center justify-end space-x-3">
+                    <div className="pt-6 border-t border-[#dadce0] flex flex-col-reverse sm:flex-row items-center justify-end gap-3 bg-white sticky bottom-0 z-10">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-2 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all"
+                            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all font-['Outfit']"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="inline-flex items-center space-x-2 bg-[#1a73e8] text-white px-8 py-2 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-[#1a73e8] text-white px-8 py-2.5 rounded-full font-medium text-sm hover:bg-[#1765cc] transition-all shadow-md active:scale-95 disabled:opacity-50 font-['Outfit']"
                         >
                             {loading ? (
                                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-b-white"></div>

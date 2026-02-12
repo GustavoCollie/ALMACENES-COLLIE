@@ -28,8 +28,8 @@ export const PurchaseOrderForm = ({ suppliers, products, onClose, onSubmit, load
     const otherProducts = products.filter(p => !assignedProductIds.includes(p.id));
 
     const formContent = (
-        <>
-            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8 space-y-6">
+        <div className="flex flex-col flex-1 overflow-hidden h-full">
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5 font-['Outfit']">
                         <label className="text-[13px] font-medium text-[#202124] ml-1">Proveedor</label>
@@ -191,10 +191,10 @@ export const PurchaseOrderForm = ({ suppliers, products, onClose, onSubmit, load
                 </div>
             </form>
 
-            <div className="px-8 py-4 border-t border-[#dadce0] bg-[#e8f0fe]/30 flex items-center justify-between">
+            <div className="px-4 md:px-8 py-3 md:py-4 border-t border-[#dadce0] bg-[#e8f0fe]/30 flex items-center justify-between sticky bottom-0 z-10">
                 <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-[#1a73e8] uppercase tracking-wider">Total Adquisición Estimado</span>
-                    <span className="text-xl font-medium text-[#202124]">
+                    <span className="text-[10px] font-bold text-[#1a73e8] uppercase tracking-wider">Total Est.</span>
+                    <span className="text-lg md:text-xl font-medium text-[#202124]">
                         ${(
                             (formData.quantity * formData.unit_price) * 1.18 +
                             formData.freight_amount +
@@ -205,37 +205,37 @@ export const PurchaseOrderForm = ({ suppliers, products, onClose, onSubmit, load
                 </div>
             </div>
 
-            <div className="px-8 py-6 border-t border-[#dadce0] bg-[#f8f9fa] flex items-center justify-end space-x-3">
+            <div className="px-4 md:px-8 py-4 md:py-6 border-t border-[#dadce0] bg-[#f8f9fa] flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sticky bottom-0 z-10">
                 <button
                     type="button"
                     onClick={onClose}
-                    className="px-6 py-2 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-full text-sm font-medium text-[#5f6368] hover:bg-[#f1f3f4] transition-all font-['Outfit']"
                 >
                     Cancelar
                 </button>
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="bg-[#1a73e8] hover:bg-[#1765cc] text-white px-8 py-2 rounded-full text-sm font-medium shadow-sm transition-all active:scale-95 disabled:opacity-50 flex items-center space-x-2"
+                    className="w-full sm:w-auto bg-[#1a73e8] hover:bg-[#1765cc] text-white px-8 py-2.5 rounded-full text-sm font-medium shadow-sm transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center space-x-2 font-['Outfit']"
                 >
                     {loading && <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-b-white"></div>}
                     <span>{loading ? 'Procesando...' : initialData ? 'Guardar Cambios' : 'Crear Orden'}</span>
                 </button>
             </div>
-        </>
+        </div>
     );
 
     if (inline) {
         return (
-            <div className="bg-white border border-[#dadce0] rounded-2xl overflow-hidden shadow-sm animate-fade-in">
-                <div className="px-8 py-6 border-b border-[#dadce0] flex items-center justify-between">
+            <div className="bg-white border border-[#dadce0] rounded-2xl overflow-hidden shadow-sm animate-fade-in flex flex-col">
+                <div className="px-4 md:px-8 py-4 md:py-6 border-b border-[#dadce0] flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center space-x-3">
-                        <div className="bg-[#e8f0fe] text-[#1a73e8] p-2.5 rounded-lg">
-                            <ShoppingCart size={24} />
+                        <div className="bg-[#e8f0fe] text-[#1a73e8] p-2 rounded-lg">
+                            <ShoppingCart size={20} className="md:w-6 md:h-6" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-medium text-[#202124]">Nueva Orden de Compra</h2>
-                            <p className="text-xs text-[#5f6368] mt-0.5 font-medium">Registrar pedido oficial a proveedor</p>
+                            <h2 className="text-base md:text-xl font-medium text-[#202124]">Nueva Orden</h2>
+                            <p className="hidden md:block text-xs text-[#5f6368] mt-0.5 font-medium">Registrar pedido oficial a proveedor</p>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-[#f1f3f4] rounded-full transition-colors">
@@ -248,16 +248,18 @@ export const PurchaseOrderForm = ({ suppliers, products, onClose, onSubmit, load
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#202124]/40 backdrop-blur-[2px] animate-fade-in">
-            <div className="bg-white w-full max-w-[640px] rounded-2xl shadow-2xl overflow-hidden animate-scale-in flex flex-col max-h-[90vh]">
-                <div className="px-8 py-6 border-b border-[#dadce0] flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-[#202124]/40 backdrop-blur-[2px] animate-fade-in modal-responsive">
+            <div className="bg-white w-full max-w-[640px] md:rounded-2xl shadow-2xl overflow-hidden animate-scale-in flex flex-col h-full md:h-auto max-h-none md:max-h-[90vh]">
+                <div className="px-4 md:px-8 py-4 md:py-6 border-b border-[#dadce0] flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center space-x-3">
-                        <div className="bg-[#e8f0fe] text-[#1a73e8] p-2.5 rounded-lg">
-                            <ShoppingCart size={24} />
+                        <div className="bg-[#e8f0fe] text-[#1a73e8] p-2 rounded-lg">
+                            <ShoppingCart size={20} className="md:w-6 md:h-6" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-medium text-[#202124]">Nueva Orden de Compra</h2>
-                            <p className="text-xs text-[#5f6368] mt-0.5 font-medium">Registrar pedido oficial a proveedor</p>
+                            <h2 className="text-base md:text-xl font-medium text-[#202124]">
+                                {initialData ? 'Editar Orden' : 'Nueva Orden de Compra'}
+                            </h2>
+                            <p className="hidden md:block text-xs text-[#5f6368] mt-0.5 font-medium">Registrar pedido oficial</p>
                         </div>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-[#f1f3f4] rounded-full transition-colors">

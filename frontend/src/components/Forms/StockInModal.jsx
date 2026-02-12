@@ -64,18 +64,18 @@ export const StockInModal = ({ product, onSubmit, onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-            <div className="w-full max-w-lg glass-panel rounded-3xl overflow-hidden animate-fade-in border border-white/5 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-slate-950/80 backdrop-blur-md modal-responsive">
+            <div className="bg-slate-950/20 md:glass-panel w-full max-w-lg md:rounded-3xl overflow-hidden animate-fade-in md:border md:border-white/5 shadow-2xl flex flex-col h-full md:h-auto max-h-none md:max-h-[90vh]">
                 {/* Header */}
-                <div className="relative p-6 bg-gradient-to-br from-indigo-600/20 to-blue-600/20 border-b border-white/5">
+                <div className="relative p-4 md:p-6 bg-gradient-to-br from-indigo-600/20 to-blue-600/20 border-b border-white/5 bg-slate-900 sticky top-0 z-10">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                            <div className="bg-indigo-500 p-3 rounded-2xl shadow-lg shadow-indigo-500/20">
-                                <PackagePlus size={24} className="text-white" />
+                        <div className="flex items-center space-x-3 md:space-x-4">
+                            <div className="bg-indigo-500 p-2 md:p-3 rounded-xl md:rounded-2xl shadow-lg shadow-indigo-500/20">
+                                <PackagePlus size={20} className="md:w-6 md:h-6 text-white" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-black text-white tracking-tight">Retorno de Producto</h2>
-                                <p className="text-xs text-indigo-400 font-bold uppercase tracking-widest mt-0.5">Devolución al Almacén</p>
+                                <h2 className="text-base md:text-xl font-black text-white tracking-tight">Retorno</h2>
+                                <p className="hidden md:block text-xs text-indigo-400 font-bold uppercase tracking-widest mt-0.5">Devolución al Almacén</p>
                             </div>
                         </div>
                         <button
@@ -87,7 +87,7 @@ export const StockInModal = ({ product, onSubmit, onClose }) => {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
+                <form onSubmit={handleSubmit} className="p-4 md:p-8 space-y-6 overflow-y-auto flex-1 bg-slate-950/20 md:bg-transparent">
                     {/* Product Summary */}
                     <div className="flex items-center space-x-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
                         <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-primary-400 font-black">
@@ -202,18 +202,18 @@ export const StockInModal = ({ product, onSubmit, onClose }) => {
                         </div>
                     </div>
 
-                    <div className="flex space-x-4 pt-4">
+                    <div className="flex flex-col-reverse sm:flex-row space-y-3 space-y-reverse sm:space-y-0 sm:space-x-4 pt-4 mt-auto md:mt-0 bg-slate-900 p-4 md:p-0 border-t border-white/5 md:border-t-0 sticky bottom-0 z-10">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-6 py-4 rounded-2xl font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all font-['Outfit']"
+                            className="w-full sm:flex-1 px-6 py-3 md:py-4 rounded-xl md:rounded-2xl font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all font-['Outfit']"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-2 group flex items-center justify-center space-x-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white px-10 py-4 rounded-2xl font-black shadow-xl shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50"
+                            className="w-full sm:flex-2 group flex items-center justify-center space-x-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white px-10 py-3 md:py-4 rounded-xl md:rounded-2xl font-black shadow-xl shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50"
                         >
                             {loading ? (
                                 <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>

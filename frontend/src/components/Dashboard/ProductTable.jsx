@@ -41,155 +41,254 @@ export const ProductTable = ({ products, purchaseOrders = [], onReturn, onEdit, 
         });
 
     return (
-        <div className="overflow-x-auto bg-white">
-            <table className="google-table">
-                <thead>
-                    <tr>
-                        <th>Producto / Descripción</th>
-                        <th>SKU</th>
-                        <th>Estado de Existencias</th>
-                        <th>Fecha Llegada</th>
-                        <th className="text-right">Acciones de Almacén</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map((product) => {
-                        const isLowStock = product.stock > 0 && product.stock <= 5;
-                        const isOutOfStock = product.stock === 0;
-                        const isPreorder = product.is_preorder;
-                        const now = new Date();
-                        const arrivalDate = isPreorder
-                            ? (product.estimated_delivery_date ? new Date(product.estimated_delivery_date) : null)
-                            : (arrivalDateMap[product.id] ? new Date(arrivalDateMap[product.id]) : null);
-                        const isPreorderBlocked = isPreorder && (!arrivalDate || arrivalDate > now);
+        <>
+            {/* Desktop table view */}
+            <div className="overflow-x-auto bg-white hidden md:block">
+                <table className="google-table">
+                    <thead>
+                        <tr>
+                            <th>Producto / Descripción</th>
+                            <th>SKU</th>
+                            <th>Estado de Existencias</th>
+                            <th>Fecha Llegada</th>
+                            <th className="text-right">Acciones de Almacén</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {products.map((product) => {
+                            const isLowStock = product.stock > 0 && product.stock <= 5;
+                            const isOutOfStock = product.stock === 0;
+                            const isPreorder = product.is_preorder;
+                            const now = new Date();
+                            const arrivalDate = isPreorder
+                                ? (product.estimated_delivery_date ? new Date(product.estimated_delivery_date) : null)
+                                : (arrivalDateMap[product.id] ? new Date(arrivalDateMap[product.id]) : null);
+                            const isPreorderBlocked = isPreorder && (!arrivalDate || arrivalDate > now);
 
-                        return (
-                            <tr key={product.id} className={cn("hover:bg-[#f8f9fa] transition-colors", isPreorder && "bg-[#f3e8ff]/30")}>
-                                <td className="font-['Outfit']">
-                                    <div className="flex items-center space-x-4">
-                                        <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden", isPreorder ? "bg-violet-100 text-violet-600" : "bg-[#f1f3f4] text-[#5f6368]")}>
-                                            {product.image_path ? (
-                                                <img src={getImageUrl(product.image_path)} alt={product.name} className="w-10 h-10 rounded-lg object-cover" />
-                                            ) : (
-                                                isPreorder ? <Clock size={20} /> : <Package size={20} />
+                            return (
+                                <tr key={product.id} className={cn("hover:bg-[#f8f9fa] transition-colors", isPreorder && "bg-[#f3e8ff]/30")}>
+                                    <td className="font-['Outfit']">
+                                        <div className="flex items-center space-x-4">
+                                            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden", isPreorder ? "bg-violet-100 text-violet-600" : "bg-[#f1f3f4] text-[#5f6368]")}>
+                                                {product.image_path ? (
+                                                    <img src={getImageUrl(product.image_path)} alt={product.name} className="w-10 h-10 rounded-lg object-cover" />
+                                                ) : (
+                                                    isPreorder ? <Clock size={20} /> : <Package size={20} />
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center space-x-2">
+                                                    <span className="font-medium text-[#202124] text-base capitalize">{product.name}</span>
+                                                    {isPreorder && (
+                                                        <span className="bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-violet-200">
+                                                            Pre-Venta
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <span className="text-xs text-[#5f6368] line-clamp-1">{product.description || 'Sin descripción'}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span className="font-mono text-[13px] bg-[#f1f3f4] px-2 py-1 rounded text-[#5f6368] uppercase">
+                                            {product.sku}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="flex flex-col space-y-1">
+                                            <div className="flex items-center space-x-2">
+                                                <span className={cn(
+                                                    "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border",
+                                                    isPreorder
+                                                        ? "bg-violet-50 text-violet-700 border-violet-200"
+                                                        : isOutOfStock
+                                                            ? "bg-[#fce8e6] text-[#d93025] border-[#f5c2c7]"
+                                                            : isLowStock
+                                                                ? "bg-[#fef7e0] text-[#b06000] border-[#feefc3]"
+                                                                : "bg-[#e6f4ea] text-[#1e8e3e] border-[#ceead6]"
+                                                )}>{product.stock} {product.unit || 'uds'}</span>
+                                                {isLowStock && !isPreorder && <AlertTriangle size={14} className="text-[#f9ab00]" />}
+                                            </div>
+                                            {isPreorder && (
+                                                <span className="text-[10px] font-bold text-amber-600 flex items-center gap-1">
+                                                    <Lock size={10} /> Pendiente de recepción
+                                                </span>
                                             )}
                                         </div>
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center space-x-2">
-                                                <span className="font-medium text-[#202124] text-base capitalize">{product.name}</span>
-                                                {isPreorder && (
-                                                    <span className="bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border border-violet-200">
-                                                        Pre-Venta
+                                    </td>
+                                    <td>
+                                        {arrivalDate ? (
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center space-x-1.5">
+                                                    <CalendarCheck size={14} className={isPreorder ? "text-violet-500" : "text-[#1e8e3e]"} />
+                                                    <span className="text-sm text-[#202124]">
+                                                        {arrivalDate.toLocaleDateString('es-CL')}
                                                     </span>
-                                                )}
-                                            </div>
-                                            <span className="text-xs text-[#5f6368] line-clamp-1">{product.description || 'Sin descripción'}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className="font-mono text-[13px] bg-[#f1f3f4] px-2 py-1 rounded text-[#5f6368] uppercase">
-                                        {product.sku}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div className="flex flex-col space-y-1">
-                                        <div className="flex items-center space-x-2">
-                                            <span className={cn(
-                                                "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border",
-                                                isPreorder
-                                                    ? "bg-violet-50 text-violet-700 border-violet-200"
-                                                    : isOutOfStock
-                                                        ? "bg-[#fce8e6] text-[#d93025] border-[#f5c2c7]"
-                                                        : isLowStock
-                                                            ? "bg-[#fef7e0] text-[#b06000] border-[#feefc3]"
-                                                            : "bg-[#e6f4ea] text-[#1e8e3e] border-[#ceead6]"
-                                            )}>
-                                                {product.stock} {product.unit || 'uds'}
-                                            </span>
-                                            {isLowStock && !isPreorder && <AlertTriangle size={14} className="text-[#f9ab00]" />}
-                                        </div>
-                                        {isPreorder && (
-                                            <span className="text-[10px] font-bold text-amber-600 flex items-center gap-1">
-                                                <Lock size={10} /> Pendiente de recepción
-                                            </span>
-                                        )}
-                                    </div>
-                                </td>
-                                <td>
-                                    {arrivalDate ? (
-                                        <div className="flex flex-col">
-                                            <div className="flex items-center space-x-1.5">
-                                                <CalendarCheck size={14} className={isPreorder ? "text-violet-500" : "text-[#1e8e3e]"} />
-                                                <span className="text-sm text-[#202124]">
-                                                    {arrivalDate.toLocaleDateString('es-CL')}
+                                                </div>
+                                                <span className="text-[10px] text-[#5f6368] font-medium ml-5">
+                                                    {isPreorder ? 'Estimada (Pre-Venta)' : 'Recibido'}
                                                 </span>
                                             </div>
-                                            <span className="text-[10px] text-[#5f6368] font-medium ml-5">
-                                                {isPreorder ? 'Estimada (Pre-Venta)' : 'Recibido'}
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <span className="text-[11px] text-[#5f6368]">—</span>
-                                    )}
-                                </td>
-                                <td>
-                                    <div className="flex items-center justify-end space-x-3">
-                                        <div className="flex items-center bg-[#f1f3f4] rounded-full p-1 border border-[#dadce0]">
-                                            <button
-                                                onClick={() => !isPreorderBlocked && onReturn(product)}
-                                                disabled={isPreorderBlocked}
-                                                className={cn(
-                                                    "flex items-center space-x-1.5 px-4 py-1.5 rounded-full text-[12px] font-medium transition-all",
-                                                    isPreorderBlocked
-                                                        ? "text-[#dadce0] cursor-not-allowed"
-                                                        : "hover:bg-white hover:text-[#1a73e8] text-[#5f6368]"
-                                                )}
-                                                title={isPreorderBlocked ? "Bloqueado: producto en pre-venta, aún no ha llegado" : "Registrar Retorno de Producto (Devolución)"}
-                                            >
-                                                {isPreorderBlocked ? <Lock size={14} /> : <Plus size={14} />}
-                                                <span>Retorno</span>
-                                            </button>
-                                            <button
-                                                onClick={() => !isPreorderBlocked && onSell(product)}
-                                                disabled={isPreorderBlocked}
-                                                className={cn(
-                                                    "flex items-center space-x-1.5 px-4 py-1.5 rounded-full text-[12px] font-medium transition-all",
-                                                    isPreorderBlocked
-                                                        ? "text-[#dadce0] cursor-not-allowed"
-                                                        : "hover:bg-white hover:text-[#1a73e8] text-[#5f6368]"
-                                                )}
-                                                title={isPreorderBlocked ? "Bloqueado: producto en pre-venta, aún no ha llegado" : "Extraer Stock"}
-                                            >
-                                                {isPreorderBlocked ? <Lock size={14} /> : <ShoppingCart size={14} />}
-                                                <span>Salida</span>
-                                            </button>
-                                        </div>
+                                        ) : (
+                                            <span className="text-[11px] text-[#5f6368]">—</span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        <div className="flex items-center justify-end space-x-3">
+                                            <div className="flex items-center bg-[#f1f3f4] rounded-full p-1 border border-[#dadce0]">
+                                                <button
+                                                    onClick={() => !isPreorderBlocked && onReturn(product)}
+                                                    disabled={isPreorderBlocked}
+                                                    className={cn(
+                                                        "flex items-center space-x-1.5 px-4 py-1.5 rounded-full text-[12px] font-medium transition-all",
+                                                        isPreorderBlocked
+                                                            ? "text-[#dadce0] cursor-not-allowed"
+                                                            : "hover:bg-white hover:text-[#1a73e8] text-[#5f6368]"
+                                                    )}
+                                                    title={isPreorderBlocked ? "Bloqueado: producto en pre-venta" : "Registrar Retorno"}
+                                                >
+                                                    {isPreorderBlocked ? <Lock size={14} /> : <Plus size={14} />}
+                                                    <span>Retorno</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => !isPreorderBlocked && onSell(product)}
+                                                    disabled={isPreorderBlocked}
+                                                    className={cn(
+                                                        "flex items-center space-x-1.5 px-4 py-1.5 rounded-full text-[12px] font-medium transition-all",
+                                                        isPreorderBlocked
+                                                            ? "text-[#dadce0] cursor-not-allowed"
+                                                            : "hover:bg-white hover:text-[#1a73e8] text-[#5f6368]"
+                                                    )}
+                                                    title={isPreorderBlocked ? "Bloqueado: producto en pre-venta" : "Extraer Stock"}
+                                                >
+                                                    {isPreorderBlocked ? <Lock size={14} /> : <ShoppingCart size={14} />}
+                                                    <span>Salida</span>
+                                                </button>
+                                            </div>
 
-                                        <div className="flex items-center space-x-1">
-                                            <button
-                                                onClick={() => onEdit(product)}
-                                                className="p-2 text-[#5f6368] hover:bg-[#f1f3f4] hover:text-[#1a73e8] rounded-full transition-all"
-                                                title="Editar"
-                                            >
-                                                <Edit size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => onDelete(product.id)}
-                                                className="p-2 text-[#5f6368] hover:bg-[#fce8e6] hover:text-[#d93025] rounded-full transition-all"
-                                                title="Eliminar"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
+                                            <div className="flex items-center space-x-1">
+                                                <button
+                                                    onClick={() => onEdit(product)}
+                                                    className="p-2 text-[#5f6368] hover:bg-[#f1f3f4] hover:text-[#1a73e8] rounded-full transition-all"
+                                                    title="Editar"
+                                                >
+                                                    <Edit size={18} />
+                                                </button>
+                                                <button
+                                                    onClick={() => onDelete(product.id)}
+                                                    className="p-2 text-[#5f6368] hover:bg-[#fce8e6] hover:text-[#d93025] rounded-full transition-all"
+                                                    title="Eliminar"
+                                                >
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </div>
                                         </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Mobile card view */}
+            <div className="md:hidden space-y-3 p-3">
+                {products.map((product) => {
+                    const isLowStock = product.stock > 0 && product.stock <= 5;
+                    const isOutOfStock = product.stock === 0;
+                    const isPreorder = product.is_preorder;
+                    const now = new Date();
+                    const arrivalDate = isPreorder
+                        ? (product.estimated_delivery_date ? new Date(product.estimated_delivery_date) : null)
+                        : (arrivalDateMap[product.id] ? new Date(arrivalDateMap[product.id]) : null);
+                    const isPreorderBlocked = isPreorder && (!arrivalDate || arrivalDate > now);
+
+                    return (
+                        <div key={product.id} className={cn("border border-[#e8eaed] rounded-2xl p-4 bg-white shadow-sm", isPreorder && "bg-[#f3e8ff]/20 border-violet-200")}>
+                            {/* Top row: image + name + stock badge */}
+                            <div className="flex items-start gap-3 mb-3">
+                                <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden shrink-0", isPreorder ? "bg-violet-100 text-violet-600" : "bg-[#f1f3f4] text-[#5f6368]")}>
+                                    {product.image_path ? (
+                                        <img src={getImageUrl(product.image_path)} alt={product.name} className="w-12 h-12 rounded-xl object-cover" />
+                                    ) : (
+                                        isPreorder ? <Clock size={22} /> : <Package size={22} />
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="font-medium text-[#202124] text-sm capitalize">{product.name}</span>
+                                        {isPreorder && (
+                                            <span className="bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase border border-violet-200">Pre-Venta</span>
+                                        )}
                                     </div>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-        </div>
+                                    <span className="text-[11px] text-[#5f6368] line-clamp-1 block">{product.description || 'Sin descripción'}</span>
+                                    <span className="font-mono text-[10px] bg-[#f1f3f4] px-1.5 py-0.5 rounded text-[#5f6368] uppercase mt-1 inline-block">{product.sku}</span>
+                                </div>
+                                <span className={cn(
+                                    "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border shrink-0",
+                                    isPreorder
+                                        ? "bg-violet-50 text-violet-700 border-violet-200"
+                                        : isOutOfStock
+                                            ? "bg-[#fce8e6] text-[#d93025] border-[#f5c2c7]"
+                                            : isLowStock
+                                                ? "bg-[#fef7e0] text-[#b06000] border-[#feefc3]"
+                                                : "bg-[#e6f4ea] text-[#1e8e3e] border-[#ceead6]"
+                                )}>{product.stock} {product.unit || 'uds'}</span>
+                            </div>
+
+                            {/* Arrival date if present */}
+                            {arrivalDate && (
+                                <div className="flex items-center gap-1.5 text-xs text-[#5f6368] mb-3">
+                                    <CalendarCheck size={12} className={isPreorder ? "text-violet-500" : "text-[#1e8e3e]"} />
+                                    <span>{isPreorder ? 'Est.' : 'Recibido'}: {arrivalDate.toLocaleDateString('es-CL')}</span>
+                                </div>
+                            )}
+
+                            {/* Action buttons */}
+                            <div className="flex items-center gap-2 pt-3 border-t border-[#f1f3f4]">
+                                <button
+                                    onClick={() => !isPreorderBlocked && onReturn(product)}
+                                    disabled={isPreorderBlocked}
+                                    className={cn(
+                                        "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium transition-all border",
+                                        isPreorderBlocked
+                                            ? "text-[#dadce0] border-[#f1f3f4] cursor-not-allowed"
+                                            : "text-[#5f6368] border-[#dadce0] hover:bg-[#f8f9fa] active:scale-95"
+                                    )}
+                                >
+                                    {isPreorderBlocked ? <Lock size={12} /> : <Plus size={12} />}
+                                    Retorno
+                                </button>
+                                <button
+                                    onClick={() => !isPreorderBlocked && onSell(product)}
+                                    disabled={isPreorderBlocked}
+                                    className={cn(
+                                        "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium transition-all border",
+                                        isPreorderBlocked
+                                            ? "text-[#dadce0] border-[#f1f3f4] cursor-not-allowed"
+                                            : "text-[#1a73e8] border-[#1a73e8]/30 bg-[#e8f0fe] hover:bg-[#d2e3fc] active:scale-95"
+                                    )}
+                                >
+                                    {isPreorderBlocked ? <Lock size={12} /> : <ShoppingCart size={12} />}
+                                    Salida
+                                </button>
+                                <button
+                                    onClick={() => onEdit(product)}
+                                    className="p-2 text-[#5f6368] hover:bg-[#f1f3f4] rounded-xl transition-all"
+                                >
+                                    <Edit size={16} />
+                                </button>
+                                <button
+                                    onClick={() => onDelete(product.id)}
+                                    className="p-2 text-[#5f6368] hover:bg-[#fce8e6] hover:text-[#d93025] rounded-xl transition-all"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </>
     );
 };
-

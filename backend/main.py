@@ -192,19 +192,62 @@ async def dynamic_cors_middleware(request, call_next):
         response.headers.setdefault("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept,Origin")
     return response
 
+# Consolidate exception handlers and ensure CORS
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    """Global exception handler for unexpected errors."""
     import traceback
     error_details = traceback.format_exc()
     logger.error(f"GLOBAL ERROR: {str(exc)}\n{error_details}")
+    
+    # Add CORS headers to the response so frontend can read it
+    origin = request.headers.get("origin")
+    headers = {}
+    if origin:
+        raw_origins = os.getenv("ALLOWED_ORIGINS", "")
+        allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
+        # Fallback to defaults if not set
+        if not allowed_origins:
+            allowed_origins = ["http://localhost:5173", "http://localhost:5174", "https://icaimporta-pe.vercel.app"]
+            
+        import re
+        vercel_preview_regex = re.compile(r"https://.*\.vercel\.app")
+        
+        if origin in allowed_origins or vercel_preview_regex.match(origin):
+            headers["Access-Control-Allow-Origin"] = origin
+            headers["Access-Control-Allow-Credentials"] = "true"
+        else:
+            # If we're hitting a 500, we should be more permissive to allow the error to reach the frontend
+            headers["Access-Control-Allow-Origin"] = origin
+            headers["Access-Control-Allow-Credentials"] = "true"
+
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal Server Error", "message": str(exc)},
-        headers={
-            "Access-Control-Allow-Origin": request.headers.get("origin", "*"),
-            "Access-Control-Allow-Credentials": "true"
-        }
+        content={
+            "error": "Internal Server Error",
+            "message": str(exc),
+            "type": type(exc).__name__
+        },
+        headers=headers
     )
+
+from fastapi.exceptions import RequestValidationError
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc):
+    logger.error(f"Validation error: {exc.errors()}")
+    body = exc.body
+    if not isinstance(body, (dict, list, str, int, float, bool, type(None))):
+        body = str(body)
+    
+    origin = request.headers.get("origin")
+    headers = {"Access-Control-Allow-Origin": origin} if origin else {}
+    
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors(), "body": body},
+        headers=headers
+    )
+
 
 app.include_router(products_router, prefix="/api/v1/products")
 app.include_router(auth_router, prefix="/api/v1/auth")
@@ -215,50 +258,23 @@ app.include_router(analytics_router, prefix="/api/v1/analytics")
 from src.infrastructure.api.public_routes import router as public_router
 app.include_router(public_router, prefix="/api/v1/public")
 
-# Servir archivos estáticos para documentos subidos
+# Static files management
 from fastapi.staticfiles import StaticFiles
 is_vercel = os.getenv("VERCEL") == "1"
 base_upload_dir = "/tmp/uploads" if is_vercel else "uploads"
 
-# Asegurar que existan los directorios
+# Ensure directories exist
 os.makedirs(f"{base_upload_dir}/products/images", exist_ok=True)
 os.makedirs(f"{base_upload_dir}/products/specs", exist_ok=True)
 os.makedirs(f"{base_upload_dir}/documents", exist_ok=True)
 
-# Montar archivos estáticos
+# Mount static files
 app.mount("/uploads", StaticFiles(directory=base_upload_dir), name="uploads")
 
 if is_vercel:
     logger.info(f"Running on Vercel: using {base_upload_dir} for static files")
 else:
     logger.info(f"Running locally: using {base_upload_dir} for static files")
-
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    """Global exception handler for unexpected errors."""
-    logger.error(f"Unexpected error: {exc}", exc_info=True)
-    return JSONResponse(
-        status_code=500,
-        content={
-            "error": "Internal Server Error",
-            "message": str(exc),
-            "type": type(exc).__name__
-        }
-    )
-
-from fastapi.exceptions import RequestValidationError
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request, exc):
-    logger.error(f"Validation error: {exc.errors()}")
-    body = exc.body
-    if not isinstance(body, (dict, list, str, int, float, bool, type(None))):
-        body = str(body)
-    return JSONResponse(
-        status_code=422,
-        content={"detail": exc.errors(), "body": body},
-    )
-
 
 @app.get("/")
 def read_root():

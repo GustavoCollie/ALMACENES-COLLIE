@@ -40,6 +40,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [attemptedSubmit, setAttemptedSubmit] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -62,6 +63,13 @@ const Checkout = () => {
             }));
         }
     }, [customer]);
+
+    useEffect(() => {
+        // Scroll to top and focus title for better a11y when arriving to checkout
+        window.scrollTo(0, 0);
+        const el = document.getElementById('checkout-title');
+        if (el) el.focus({ preventScroll: true });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -86,6 +94,22 @@ const Checkout = () => {
             return;
         }
 
+        // Basic client-side validation
+        const isValid = () => {
+            if (!formData.firstName || !formData.lastName || !formData.email) return false;
+            if (formData.shippingType === 'DELIVERY') {
+                if (!formData.address || !formData.city || !formData.country) return false;
+            }
+            return true;
+        };
+
+        if (!isValid()) {
+            setAttemptedSubmit(true);
+            setError('Por favor completa los campos requeridos.');
+            return;
+        }
+
+        setAttemptedSubmit(false);
         setLoading(true);
         setError(null);
 
@@ -184,10 +208,18 @@ const Checkout = () => {
 
     const isPeru = formData.country === 'Peru';
 
+    const isFormValid = () => {
+        if (!formData.firstName || !formData.lastName || !formData.email) return false;
+        if (formData.shippingType === 'DELIVERY') {
+            if (!formData.address || !formData.city || !formData.country) return false;
+        }
+        return true;
+    };
+
     return (
         <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center sm:text-left font-['Outfit']">Finalizar Compra</h1>
+                <h1 id="checkout-title" tabIndex={-1} className="text-3xl font-bold text-gray-900 mb-8 text-center sm:text-left font-['Outfit']">Finalizar Compra</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     {/* Left Column: Form */}
@@ -369,8 +401,9 @@ const Checkout = () => {
                             <div className="pt-6 border-t border-gray-100">
                                 <button
                                     type="submit"
-                                    disabled={loading}
-                                    className={`w-full flex justify-center items-center py-4 px-6 border border-transparent rounded-xl shadow-lg text-base font-semibold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                    disabled={!isFormValid() || loading}
+                                    aria-disabled={!isFormValid() || loading}
+                                    className={`w-full flex justify-center items-center py-4 px-6 border border-transparent rounded-xl shadow-lg text-base font-semibold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all ${loading || !isFormValid() ? 'opacity-70 cursor-not-allowed' : ''}`}
                                 >
                                     {loading ? (
                                         <span className="flex items-center">

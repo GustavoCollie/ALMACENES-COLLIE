@@ -116,8 +116,9 @@ const CartSidebar = () => {
                             <button
                                 onClick={() => {
                                     toggleCart();
-                                    navigate('/checkout');
+                                    navigate('/checkout', { state: { fromCart: true } });
                                 }}
+                                aria-label="Ir a finalizar compra"
                                 className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
                             >
                                 Checkout
